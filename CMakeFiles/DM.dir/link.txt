@@ -1,0 +1,2 @@
+/usr/bin/ar cr libDM.a  CMakeFiles/DM.dir/depthmap.cpp.o
+/usr/bin/ranlib libDM.a
