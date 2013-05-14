@@ -112,6 +112,19 @@ DM/fast:
 .PHONY : DM/fast
 
 #=============================================================================
+# Target rules for targets named brute
+
+# Build rule for target.
+brute: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 brute
+.PHONY : brute
+
+# fast build rule for target.
+brute/fast:
+	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/build
+.PHONY : brute/fast
+
+#=============================================================================
 # Target rules for targets named main
 
 # Build rule for target.
@@ -123,6 +136,30 @@ main: cmake_check_build_system
 main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
+
+brute.o: brute.cpp.o
+.PHONY : brute.o
+
+# target to build an object file
+brute.cpp.o:
+	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/brute.cpp.o
+.PHONY : brute.cpp.o
+
+brute.i: brute.cpp.i
+.PHONY : brute.i
+
+# target to preprocess a source file
+brute.cpp.i:
+	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/brute.cpp.i
+.PHONY : brute.cpp.i
+
+brute.s: brute.cpp.s
+.PHONY : brute.s
+
+# target to generate assembly for a file
+brute.cpp.s:
+	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/brute.cpp.s
+.PHONY : brute.cpp.s
 
 depthmap.o: depthmap.cpp.o
 .PHONY : depthmap.o
@@ -179,9 +216,13 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... DM"
+	@echo "... brute"
 	@echo "... edit_cache"
 	@echo "... main"
 	@echo "... rebuild_cache"
+	@echo "... brute.o"
+	@echo "... brute.i"
+	@echo "... brute.s"
 	@echo "... depthmap.o"
 	@echo "... depthmap.i"
 	@echo "... depthmap.s"

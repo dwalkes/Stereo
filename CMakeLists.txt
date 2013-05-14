@@ -16,6 +16,8 @@ set(OpenCV_DIR "/opt/opencv244/share/OpenCV/")
 find_package( OpenCV REQUIRED )
 add_library(DM depthmap.cpp)
 target_link_libraries( DM ${OpenCV_LIBS})
+add_executable( brute brute.cpp )
+target_link_libraries( brute ${OpenCV_LIBS})
 add_executable( main main.cpp )
 target_link_libraries( main ${OpenCV_LIBS} ${PCL_LIBRARIES} DM)
 

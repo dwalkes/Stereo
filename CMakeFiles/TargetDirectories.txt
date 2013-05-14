@@ -1,2 +1,3 @@
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/DM.dir
+/home/kirill/coding/MyPy/Stereo/CMakeFiles/brute.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/main.dir
