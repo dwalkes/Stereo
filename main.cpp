@@ -59,8 +59,13 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
   reg.setSmoothnessThreshold (10.0 / 180.0 * M_PI);
   reg.setCurvatureThreshold (1.0);
 
-  std::vector <pcl::PointIndices> clusters;
-  reg.extract (clusters);
+  std::vector <pcl::PointIndices> clusters, tmp_clusters;
+  reg.extract (tmp_clusters);
+  for(int i = 0; i < tmp_clusters.size(); i++)
+  {
+      if(tmp_clusters[i].indices.size() > 0)
+        clusters.push_back(tmp_clusters[i]);
+  }
 
   std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
   std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
@@ -78,17 +83,23 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
   for(int j = 0; j < clusters.size(); j++)
   {
       cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<bool>::type);
+      std::cout <<j << " " << clusters[j].indices.size() << std::endl;
       for(int i = 0; i < clusters[j].indices.size(); i++)
       {
-        std::cout << clusters[j].indices[i] << std::endl;
-        std::cout << cloud->at(clusters[j].indices[i])<< std:: endl;
+        //std::cout << clusters[j].indices[i] << std::endl;
+        //std::cout << cloud->at(clusters[j].indices[i])<< std:: endl;
         to_show.data[clusters[j].indices[i]] = 200;
+        //to_show.at<uchar>(clusters[j].indices[i]/cloud->height, clusters[j].indices[i]%cloud->height) = 200;
         //to_show.at<bool>((int)(cloud->at(clusters[j].indices[i]).y), (int)(cloud->at(clusters[j].indices[i]).x)) = 200;
         counter++;
       }
       cv::imshow("", to_show);
       cv::waitKey();
   }
+  
+  //cv::Mat mat_header_with_disbled_reference_counting(cloud->height, cloud->width, CV_32F, (void*)&cloud->points[0]);
+  //cv::imshow("", mat_header_with_disbled_reference_counting);
+  //cv::waitKey();
   return reg.getColoredCloud();
 }
 
@@ -124,6 +135,8 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
   //Create matrix that will contain 3D corrdinates of each pixel
   cv::Mat recons3D(img_disparity.size(), CV_32FC3);
   
+  point_cloud_ptr->width = img_rgb.cols;
+  point_cloud_ptr->height = img_rgb.rows;
   //Reproject image to 3D
   std::cout << "Reprojecting image to 3D..." << std::endl;
   cv::reprojectImageTo3D( img_disparity, recons3D, Q, false, CV_32F );
@@ -170,11 +183,11 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
       uint32_t rgb = (static_cast<uint32_t>(pr) << 16 |
               static_cast<uint32_t>(pg) << 8 | static_cast<uint32_t>(pb));
       point.rgb = *reinterpret_cast<float*>(&rgb);
-      point_cloud_ptr->points.push_back (point);
+      point_cloud_ptr->push_back (point);
     }
   }
-  point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
-  point_cloud_ptr->height = 1;
+  //point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
+  //point_cloud_ptr->height = 1;
 
 }
 
@@ -226,6 +239,7 @@ int main( int argc, char** argv )
   //Create point cloud and fill it
   std::cout << "Creating Point Cloud..." <<std::endl;
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
+
   reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
 
   clock_t begin, end;
