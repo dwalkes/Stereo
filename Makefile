@@ -137,6 +137,32 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+#=============================================================================
+# Target rules for targets named stereoBMtune
+
+# Build rule for target.
+stereoBMtune: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 stereoBMtune
+.PHONY : stereoBMtune
+
+# fast build rule for target.
+stereoBMtune/fast:
+	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/build
+.PHONY : stereoBMtune/fast
+
+#=============================================================================
+# Target rules for targets named stereoVartune
+
+# Build rule for target.
+stereoVartune: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 stereoVartune
+.PHONY : stereoVartune
+
+# fast build rule for target.
+stereoVartune/fast:
+	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/build
+.PHONY : stereoVartune/fast
+
 brute.o: brute.cpp.o
 .PHONY : brute.o
 
@@ -209,6 +235,54 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+stereoBMtune.o: stereoBMtune.c.o
+.PHONY : stereoBMtune.o
+
+# target to build an object file
+stereoBMtune.c.o:
+	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o
+.PHONY : stereoBMtune.c.o
+
+stereoBMtune.i: stereoBMtune.c.i
+.PHONY : stereoBMtune.i
+
+# target to preprocess a source file
+stereoBMtune.c.i:
+	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/stereoBMtune.c.i
+.PHONY : stereoBMtune.c.i
+
+stereoBMtune.s: stereoBMtune.c.s
+.PHONY : stereoBMtune.s
+
+# target to generate assembly for a file
+stereoBMtune.c.s:
+	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s
+.PHONY : stereoBMtune.c.s
+
+stereoVartune.o: stereoVartune.cpp.o
+.PHONY : stereoVartune.o
+
+# target to build an object file
+stereoVartune.cpp.o:
+	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o
+.PHONY : stereoVartune.cpp.o
+
+stereoVartune.i: stereoVartune.cpp.i
+.PHONY : stereoVartune.i
+
+# target to preprocess a source file
+stereoVartune.cpp.i:
+	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/stereoVartune.cpp.i
+.PHONY : stereoVartune.cpp.i
+
+stereoVartune.s: stereoVartune.cpp.s
+.PHONY : stereoVartune.s
+
+# target to generate assembly for a file
+stereoVartune.cpp.s:
+	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s
+.PHONY : stereoVartune.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -220,6 +294,8 @@ help:
 	@echo "... edit_cache"
 	@echo "... main"
 	@echo "... rebuild_cache"
+	@echo "... stereoBMtune"
+	@echo "... stereoVartune"
 	@echo "... brute.o"
 	@echo "... brute.i"
 	@echo "... brute.s"
@@ -229,6 +305,12 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... stereoBMtune.o"
+	@echo "... stereoBMtune.i"
+	@echo "... stereoBMtune.s"
+	@echo "... stereoVartune.o"
+	@echo "... stereoVartune.i"
+	@echo "... stereoVartune.s"
 .PHONY : help
 
 

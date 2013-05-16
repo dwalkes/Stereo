@@ -4,9 +4,17 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
-  "/home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoBMtune.c" "/home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o"
+  "/home/kirill/coding/MyPy/Stereo/stereoBMtune.c" "/home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o"
   )
 SET(CMAKE_C_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+SET(CMAKE_TARGET_DEFINITIONS
+  "EIGEN_USE_NEW_STDVECTOR"
+  "EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET"
+  "FLANN_STATIC"
+  "qh_QHpointer"
+  )
 
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
@@ -14,6 +22,11 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
+  "/usr/include/vtk-5.8"
+  "/usr/local/include/pcl-1.7"
+  "/usr/include/eigen3"
+  "/usr/include/openni"
+  "/usr/include/qhull"
   "/opt/opencv244/include/opencv"
   "/opt/opencv244/include"
   "/usr/include/gtk-2.0"

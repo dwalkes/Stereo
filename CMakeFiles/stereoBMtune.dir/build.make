@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kirill/coding/MyPy/Stereo/StereoBMTuner
+CMAKE_SOURCE_DIR = /home/kirill/coding/MyPy/Stereo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kirill/coding/MyPy/Stereo/StereoBMTuner
+CMAKE_BINARY_DIR = /home/kirill/coding/MyPy/Stereo
 
 # Include any dependencies generated for this target.
 include CMakeFiles/stereoBMtune.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/stereoBMtune.dir/flags.make
 
 CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o: CMakeFiles/stereoBMtune.dir/flags.make
 CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o: stereoBMtune.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o   -c /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoBMtune.c
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o   -c /home/kirill/coding/MyPy/Stereo/stereoBMtune.c
 
 CMakeFiles/stereoBMtune.dir/stereoBMtune.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/stereoBMtune.dir/stereoBMtune.c.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoBMtune.c > CMakeFiles/stereoBMtune.dir/stereoBMtune.c.i
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /home/kirill/coding/MyPy/Stereo/stereoBMtune.c > CMakeFiles/stereoBMtune.dir/stereoBMtune.c.i
 
 CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoBMtune.c -o CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /home/kirill/coding/MyPy/Stereo/stereoBMtune.c -o CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s
 
 CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o.requires:
 .PHONY : CMakeFiles/stereoBMtune.dir/stereoBMtune.c.o.requires
@@ -114,6 +114,6 @@ CMakeFiles/stereoBMtune.dir/clean:
 .PHONY : CMakeFiles/stereoBMtune.dir/clean
 
 CMakeFiles/stereoBMtune.dir/depend:
-	cd /home/kirill/coding/MyPy/Stereo/StereoBMTuner && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles/stereoBMtune.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/kirill/coding/MyPy/Stereo && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoBMtune.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/stereoBMtune.dir/depend
 

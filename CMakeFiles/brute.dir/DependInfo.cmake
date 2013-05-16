@@ -29,6 +29,18 @@ SET(CMAKE_C_TARGET_INCLUDE_PATH
   "/usr/include/qhull"
   "/opt/opencv244/include/opencv"
   "/opt/opencv244/include"
+  "/usr/include/gtk-2.0"
+  "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+  "/usr/include/atk-1.0"
+  "/usr/include/cairo"
+  "/usr/include/gdk-pixbuf-2.0"
+  "/usr/include/pango-1.0"
+  "/usr/include/gio-unix-2.0"
+  "/usr/include/glib-2.0"
+  "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+  "/usr/include/pixman-1"
+  "/usr/include/freetype2"
+  "/usr/include/libpng12"
   )
 SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

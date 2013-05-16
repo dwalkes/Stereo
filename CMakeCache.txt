@@ -697,6 +697,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_PCL_SURFACE:INTERNAL=[/usr/local/lib/libpcl_surface
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_TRACKING:INTERNAL=[/usr/local/lib/libpcl_tracking.so][/usr/local/include/pcl-1.7][v()]
 //Details about finding PCL_VISUALIZATION
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_VISUALIZATION:INTERNAL=[/usr/local/lib/libpcl_visualization.so][/usr/local/include/pcl-1.7][v()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.26()]
 //Details about finding eigen
 FIND_PACKAGE_MESSAGE_DETAILS_eigen:INTERNAL=[/usr/include/eigen3][v()]
 //Details about finding libusb-1.0
@@ -705,6 +707,40 @@ FIND_PACKAGE_MESSAGE_DETAILS_libusb-1.0:INTERNAL=[/usr/include][v()]
 FIND_PACKAGE_MESSAGE_DETAILS_openni:INTERNAL=[/usr/lib/libOpenNI.so][/usr/include/openni][v()]
 //Details about finding qhull
 FIND_PACKAGE_MESSAGE_DETAILS_qhull:INTERNAL=[/usr/lib/libqhull.so][/usr/include/qhull][v()]
+GTK2_CFLAGS:INTERNAL=-pthread;-I/usr/include/gtk-2.0;-I/usr/lib/x86_64-linux-gnu/gtk-2.0/include;-I/usr/include/atk-1.0;-I/usr/include/cairo;-I/usr/include/gdk-pixbuf-2.0;-I/usr/include/pango-1.0;-I/usr/include/gio-unix-2.0/;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include;-I/usr/include/pixman-1;-I/usr/include/freetype2;-I/usr/include/libpng12
+GTK2_CFLAGS_I:INTERNAL=
+GTK2_CFLAGS_OTHER:INTERNAL=-pthread
+GTK2_FOUND:INTERNAL=1
+GTK2_INCLUDEDIR:INTERNAL=/usr/include
+GTK2_INCLUDE_DIRS:INTERNAL=/usr/include/gtk-2.0;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/atk-1.0;/usr/include/cairo;/usr/include/gdk-pixbuf-2.0;/usr/include/pango-1.0;/usr/include/gio-unix-2.0/;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/include/pixman-1;/usr/include/freetype2;/usr/include/libpng12
+GTK2_LDFLAGS:INTERNAL=-lgtk-x11-2.0;-lgdk-x11-2.0;-latk-1.0;-lgio-2.0;-lpangoft2-1.0;-lpangocairo-1.0;-lgdk_pixbuf-2.0;-lcairo;-lpango-1.0;-lfreetype;-lfontconfig;-lgobject-2.0;-lglib-2.0
+GTK2_LDFLAGS_OTHER:INTERNAL=
+GTK2_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+GTK2_LIBRARIES:INTERNAL=gtk-x11-2.0;gdk-x11-2.0;atk-1.0;gio-2.0;pangoft2-1.0;pangocairo-1.0;gdk_pixbuf-2.0;cairo;pango-1.0;freetype;fontconfig;gobject-2.0;glib-2.0
+GTK2_LIBRARY_DIRS:INTERNAL=
+GTK2_LIBS:INTERNAL=
+GTK2_LIBS_L:INTERNAL=
+GTK2_LIBS_OTHER:INTERNAL=
+GTK2_LIBS_PATHS:INTERNAL=
+GTK2_PREFIX:INTERNAL=/usr
+GTK2_STATIC_CFLAGS:INTERNAL=-pthread;-I/usr/include/gtk-2.0;-I/usr/lib/x86_64-linux-gnu/gtk-2.0/include;-I/usr/include/atk-1.0;-I/usr/include/cairo;-I/usr/include/gdk-pixbuf-2.0;-I/usr/include/pango-1.0;-I/usr/include/gio-unix-2.0/;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include;-I/usr/include/pixman-1;-I/usr/include/freetype2;-I/usr/include/libpng12
+GTK2_STATIC_CFLAGS_I:INTERNAL=
+GTK2_STATIC_CFLAGS_OTHER:INTERNAL=-pthread
+GTK2_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/gtk-2.0;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/atk-1.0;/usr/include/cairo;/usr/include/gdk-pixbuf-2.0;/usr/include/pango-1.0;/usr/include/gio-unix-2.0/;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/include/pixman-1;/usr/include/freetype2;/usr/include/libpng12
+GTK2_STATIC_LDFLAGS:INTERNAL=-pthread;-lgtk-x11-2.0;-lgdk-x11-2.0;-latk-1.0;-lpangoft2-1.0;-lXinerama;-lXi;-lXrandr;-lXcursor;-lXcomposite;-lXdamage;-lpangocairo-1.0;-lgdk_pixbuf-2.0;-lgio-2.0;-lresolv;-lXext;-lXfixes;-lcairo;-lpixman-1;-lxcb-shm;-lxcb-render;-lXrender;-lX11;-lpthread;-lxcb;-lXau;-lXdmcp;-lpng12;-lm;-lpango-1.0;-lz;-lfontconfig;-lexpat;-lfreetype;-lgmodule-2.0;-ldl;-lgobject-2.0;-lffi;-lglib-2.0;-lrt;-lpcre
+GTK2_STATIC_LDFLAGS_OTHER:INTERNAL=
+GTK2_STATIC_LIBDIR:INTERNAL=
+GTK2_STATIC_LIBRARIES:INTERNAL=gtk-x11-2.0;gdk-x11-2.0;atk-1.0;pangoft2-1.0;Xinerama;Xi;Xrandr;Xcursor;Xcomposite;Xdamage;pangocairo-1.0;gdk_pixbuf-2.0;gio-2.0;resolv;Xext;Xfixes;cairo;pixman-1;xcb-shm;xcb-render;Xrender;X11;pthread;xcb;Xau;Xdmcp;png12;m;pango-1.0;z;fontconfig;expat;freetype;gmodule-2.0;dl;gobject-2.0;ffi;glib-2.0;rt;pcre
+GTK2_STATIC_LIBRARY_DIRS:INTERNAL=
+GTK2_STATIC_LIBS:INTERNAL=
+GTK2_STATIC_LIBS_L:INTERNAL=
+GTK2_STATIC_LIBS_OTHER:INTERNAL=
+GTK2_STATIC_LIBS_PATHS:INTERNAL=
+GTK2_VERSION:INTERNAL=2.24.13
+GTK2_gtk+-2.0_INCLUDEDIR:INTERNAL=
+GTK2_gtk+-2.0_LIBDIR:INTERNAL=
+GTK2_gtk+-2.0_PREFIX:INTERNAL=
+GTK2_gtk+-2.0_VERSION:INTERNAL=
 //ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_DBG
 OpenCV_3RDPARTY_LIB_DIR_DBG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_OPT
@@ -891,6 +927,7 @@ PC_OPENNI_openni-dev_PREFIX:INTERNAL=
 PC_OPENNI_openni-dev_VERSION:INTERNAL=
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+__pkg_config_checked_GTK2:INTERNAL=1
 __pkg_config_checked_PC_EIGEN:INTERNAL=1
 __pkg_config_checked_PC_FLANN:INTERNAL=1
 __pkg_config_checked_PC_OPENNI:INTERNAL=1

@@ -14,6 +14,18 @@ add_definitions(${PCL_DEFINITIONS})
 set(OpenCV_DIR "/opt/opencv244/share/OpenCV/")
 
 find_package( OpenCV REQUIRED )
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
+include_directories(${GTK2_INCLUDE_DIRS})
+link_directories(${GTK2_LIBRARY_DIRS})
+
+add_executable( stereoBMtune stereoBMtune.c )
+target_link_libraries( stereoBMtune ${OpenCV_LIBS} ${GTK2_LIBRARIES})
+
+add_executable( stereoVartune stereoVartune.cpp )
+target_link_libraries( stereoVartune ${OpenCV_LIBS})
+
 add_library(DM depthmap.cpp)
 target_link_libraries( DM ${OpenCV_LIBS})
 add_executable( brute brute.cpp )

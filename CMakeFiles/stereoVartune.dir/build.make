@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kirill/coding/MyPy/Stereo/StereoBMTuner
+CMAKE_SOURCE_DIR = /home/kirill/coding/MyPy/Stereo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kirill/coding/MyPy/Stereo/StereoBMTuner
+CMAKE_BINARY_DIR = /home/kirill/coding/MyPy/Stereo
 
 # Include any dependencies generated for this target.
 include CMakeFiles/stereoVartune.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/stereoVartune.dir/flags.make
 
 CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o: CMakeFiles/stereoVartune.dir/flags.make
 CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o: stereoVartune.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o"
-	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o -c /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoVartune.cpp
+	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o -c /home/kirill/coding/MyPy/Stereo/stereoVartune.cpp
 
 CMakeFiles/stereoVartune.dir/stereoVartune.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/stereoVartune.dir/stereoVartune.cpp.i"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoVartune.cpp > CMakeFiles/stereoVartune.dir/stereoVartune.cpp.i
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/kirill/coding/MyPy/Stereo/stereoVartune.cpp > CMakeFiles/stereoVartune.dir/stereoVartune.cpp.i
 
 CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/kirill/coding/MyPy/Stereo/StereoBMTuner/stereoVartune.cpp -o CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/kirill/coding/MyPy/Stereo/stereoVartune.cpp -o CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s
 
 CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o.requires:
 .PHONY : CMakeFiles/stereoVartune.dir/stereoVartune.cpp.o.requires
@@ -114,6 +114,6 @@ CMakeFiles/stereoVartune.dir/clean:
 .PHONY : CMakeFiles/stereoVartune.dir/clean
 
 CMakeFiles/stereoVartune.dir/depend:
-	cd /home/kirill/coding/MyPy/Stereo/StereoBMTuner && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner /home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles/stereoVartune.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/kirill/coding/MyPy/Stereo && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo /home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoVartune.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/stereoVartune.dir/depend
 
