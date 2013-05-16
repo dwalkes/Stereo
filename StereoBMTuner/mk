@@ -1,0 +1,6 @@
+all:
+	gcc -o stereoBMtune stereoBMtune.c `pkg-config --cflags --libs gtk+-2.0 gmodule-2.0 opencv`
+	clang++ -o stereoVartune stereoVartune.cpp `pkg-config --cflags --libs opencv`
+
+clean:
+	rm main

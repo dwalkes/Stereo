@@ -1,0 +1,2 @@
+/home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles/stereoBMtune.dir
+/home/kirill/coding/MyPy/Stereo/StereoBMTuner/CMakeFiles/stereoVartune.dir
