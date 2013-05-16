@@ -15,21 +15,9 @@
 #include <pcl/segmentation/region_growing.h>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/contrib/contrib.hpp>
-
 #include <time.h>
 
 #include "depthmap.h"
-
-#define CUSTOM_REPROJECT
-/*** To understand the CUSTOM_REPROJECT code, please read Chapter 12 of the book
-  Learning OpenCV: Computer Vision with the OpenCV Library. (Page 435) 
-  I am using it because cv::reprojectImageTo3D is not giving me the expected
-  results for some reason.
-  
-  If you want to use this program with cv::reprojectImageTo3D please comment
-  the previous #define CUSTOM_REPROJECT and recompile.
-    
-***/
 
 cv::Mat toGray(const cv::Mat& rgb_image)
 {
@@ -73,16 +61,9 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
     std::endl << "cloud that belong to the first cluster:" << std::endl;
   int counter = 0;
   //384 288
-  /*for(int i = 0; i < to_show.rows; i++)
-    for(int j = 0; j < to_show.cols/2; j++)
-    {
-        to_show.data[i*to_show.cols + j] = 200;
-    }
-  */
-  //while (counter < 5 || counter > clusters[0].indices.size ())
-  for(int j = 0; j < clusters.size(); j++)
+  /*for(int j = 0; j < clusters.size(); j++)
   {
-      cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<bool>::type);
+      cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
       std::cout <<j << " " << clusters[j].indices.size() << std::endl;
       for(int i = 0; i < clusters[j].indices.size(); i++)
       {
@@ -95,11 +76,41 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
       }
       cv::imshow("", to_show);
       cv::waitKey();
+  }*/
+  /*cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
+  for(int i = 0; i < cloud->height; i++)
+  {
+    for(int j = 0; j < cloud->width; j++)
+    {
+        to_show.at<uchar>(i, j) = cloud->at(counter).z;
+        counter++;
+    }
   }
-  
-  //cv::Mat mat_header_with_disbled_reference_counting(cloud->height, cloud->width, CV_32F, (void*)&cloud->points[0]);
-  //cv::imshow("", mat_header_with_disbled_reference_counting);
-  //cv::waitKey();
+      cv::imshow("rec2", to_show);
+      cv::waitKey();*/
+    double minX = 10000000, maxX = -100000000, minY = 10000000, maxY = -1000000000, minZ = 1000000000, maxZ = -1000000000;
+    for(int i =0 ; i < cloud->points.size(); i++)
+    {
+        if(cloud->at(i).x > maxX) maxX = cloud->at(i).x;
+        if(cloud->at(i).y > maxY) maxY = cloud->at(i).y;
+        if(cloud->at(i).x < minX) minX = cloud->at(i).x;
+        if(cloud->at(i).y < minY) minY = cloud->at(i).y;
+        if(cloud->at(i).z < minZ) minZ = cloud->at(i).z;
+        if(cloud->at(i).z > maxZ) maxZ = cloud->at(i).z;
+    }
+    std::cout<<"minX" << minX << "maxX" << maxX << "minY" << minY<< "maxY" << maxY<<"minZ"<<minZ<<"maxZ"<<maxZ<<"\n";
+    int width = (maxX - minX), height = (maxY - minY);
+    double dx = width/384.0, dy = height/288.0;
+    cv::Mat res = cv::Mat::zeros(288+10, 384+10, CV_8U);
+    for(int i =0 ; i < cloud->points.size(); i++)
+    {
+        int x = (cloud->at(i).x - minX)/dx;
+        int y = (cloud->at(i).y - minY)/dy;
+        res.at<uchar>(y, x) = 2*(int)(cloud->at(i).z);
+    }
+      cv::imshow("rec2", res);
+      cv::waitKey();
+ 
   return reg.getColoredCloud();
 }
 
@@ -118,7 +129,6 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
 
 void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
-#ifdef CUSTOM_REPROJECT
   //Get the interesting parameters from Q
   double Q03, Q13, Q23, Q32, Q33;
   Q03 = Q.at<double>(0,3);
@@ -129,33 +139,16 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
   
   std::cout << "Q(0,3) = "<< Q03 <<"; Q(1,3) = "<< Q13 <<"; Q(2,3) = "<< Q23 <<"; Q(3,2) = "<< Q32 <<"; Q(3,3) = "<< Q33 <<";" << std::endl;
   
-#endif  
- 
-#ifndef CUSTOM_REPROJECT
-  //Create matrix that will contain 3D corrdinates of each pixel
-  cv::Mat recons3D(img_disparity.size(), CV_32FC3);
-  
-  point_cloud_ptr->width = img_rgb.cols;
-  point_cloud_ptr->height = img_rgb.rows;
-  //Reproject image to 3D
-  std::cout << "Reprojecting image to 3D..." << std::endl;
-  cv::reprojectImageTo3D( img_disparity, recons3D, Q, false, CV_32F );
-#endif  
   double px, py, pz;
   uchar pr, pg, pb;
   
   for (int i = 0; i < img_rgb.rows; i++)
   {
     uchar* rgb_ptr = img_rgb.ptr<uchar>(i);
-#ifdef CUSTOM_REPROJECT
     uchar* disp_ptr = img_disparity.ptr<uchar>(i);
-#else
-    double* recons_ptr = recons3D.ptr<double>(i);
-#endif
     for (int j = 0; j < img_rgb.cols; j++)
     {
       //Get 3D coordinates
-#ifdef CUSTOM_REPROJECT
       uchar d = disp_ptr[j];
       if ( d == 0 ) continue; //Discard bad pixels
       double pw = -1.0 * static_cast<double>(d) * Q32 + Q33; 
@@ -166,11 +159,6 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
       px = px/pw;
       py = py/pw;
       pz = pz/pw;
-#else
-      px = recons_ptr[3*j];
-      py = recons_ptr[3*j+1];
-      pz = recons_ptr[3*j+2];
-#endif
       //Get RGB info
       pb = rgb_ptr[3*j];
       pg = rgb_ptr[3*j+1];
@@ -249,11 +237,9 @@ int main( int argc, char** argv )
   end = clock();
   std::cout <<"time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
 
-  //Create visualizer
   boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
   viewer = createVisualizer( point_cloud_ptr );
   
-  //Main loop
   while ( !viewer->wasStopped())
   {
     viewer->spinOnce(100);
