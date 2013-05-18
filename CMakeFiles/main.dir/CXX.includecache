@@ -55,12 +55,20 @@ depthmap.h
 /home/kirill/coding/MyPy/Stereo/depthmap.h
 reprojection.h
 /home/kirill/coding/MyPy/Stereo/reprojection.h
+segment.h
+/home/kirill/coding/MyPy/Stereo/segment.h
 
 /home/kirill/coding/MyPy/Stereo/reprojection.h
 cv.h
 -
 highgui.h
 -
+pcl/common/common_headers.h
+-
+pcl/point_types.h
+-
+
+/home/kirill/coding/MyPy/Stereo/segment.h
 pcl/common/common_headers.h
 -
 pcl/point_types.h

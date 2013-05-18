@@ -5,6 +5,7 @@ CMakeFiles/main.dir/main.cpp.o
  /home/kirill/coding/MyPy/Stereo/depthmap.h
  /home/kirill/coding/MyPy/Stereo/main.cpp
  /home/kirill/coding/MyPy/Stereo/reprojection.h
+ /home/kirill/coding/MyPy/Stereo/segment.h
  /opt/opencv244/include/opencv/cv.h
  /opt/opencv244/include/opencv/highgui.h
  /opt/opencv244/include/opencv2/calib3d/calib3d.hpp

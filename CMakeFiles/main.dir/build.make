@@ -131,6 +131,7 @@ main: /usr/local/lib/libpcl_tracking.so
 main: /usr/local/lib/libpcl_stereo.so
 main: libDM.a
 main: libReprojection.a
+main: libSegment.a
 main: /opt/opencv244/lib/libopencv_calib3d.so
 main: /opt/opencv244/lib/libopencv_contrib.so
 main: /opt/opencv244/lib/libopencv_core.so

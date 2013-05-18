@@ -1,0 +1,2 @@
+/usr/bin/ar cr libSegment.a  CMakeFiles/Segment.dir/segment.cpp.o
+/usr/bin/ranlib libSegment.a

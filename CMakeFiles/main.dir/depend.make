@@ -4,6 +4,7 @@
 CMakeFiles/main.dir/main.cpp.o: depthmap.h
 CMakeFiles/main.dir/main.cpp.o: main.cpp
 CMakeFiles/main.dir/main.cpp.o: reprojection.h
+CMakeFiles/main.dir/main.cpp.o: segment.h
 CMakeFiles/main.dir/main.cpp.o: /opt/opencv244/include/opencv/cv.h
 CMakeFiles/main.dir/main.cpp.o: /opt/opencv244/include/opencv/highgui.h
 CMakeFiles/main.dir/main.cpp.o: /opt/opencv244/include/opencv2/calib3d/calib3d.hpp

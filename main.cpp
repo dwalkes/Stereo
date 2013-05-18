@@ -19,6 +19,7 @@
 
 #include "depthmap.h"
 #include "reprojection.h"
+#include "segment.h"
 
 pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
@@ -53,6 +54,12 @@ std::vector <pcl::PointIndices> getClusters(pcl::RegionGrowing<pcl::PointXYZRGB,
         clusters.push_back(tmp_clusters[i]);
     }
     return clusters;
+}
+
+std::vector<Segment> getFilteredSegments(std::vector<pcl::PointIndices>& clusters)
+{
+    std::vector<Segment> res;
+    return res;
 }
 
 //This function creates a PCL visualizer, sets the point cloud to view and returns a pointer

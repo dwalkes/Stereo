@@ -125,6 +125,19 @@ Reprojection/fast:
 .PHONY : Reprojection/fast
 
 #=============================================================================
+# Target rules for targets named Segment
+
+# Build rule for target.
+Segment: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Segment
+.PHONY : Segment
+
+# fast build rule for target.
+Segment/fast:
+	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/build
+.PHONY : Segment/fast
+
+#=============================================================================
 # Target rules for targets named brute
 
 # Build rule for target.
@@ -285,6 +298,30 @@ reprojection.cpp.s:
 	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/reprojection.cpp.s
 .PHONY : reprojection.cpp.s
 
+segment.o: segment.cpp.o
+.PHONY : segment.o
+
+# target to build an object file
+segment.cpp.o:
+	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/segment.cpp.o
+.PHONY : segment.cpp.o
+
+segment.i: segment.cpp.i
+.PHONY : segment.i
+
+# target to preprocess a source file
+segment.cpp.i:
+	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/segment.cpp.i
+.PHONY : segment.cpp.i
+
+segment.s: segment.cpp.s
+.PHONY : segment.s
+
+# target to generate assembly for a file
+segment.cpp.s:
+	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/segment.cpp.s
+.PHONY : segment.cpp.s
+
 stereoBMtune.o: stereoBMtune.c.o
 .PHONY : stereoBMtune.o
 
@@ -365,6 +402,7 @@ help:
 	@echo "... depend"
 	@echo "... DM"
 	@echo "... Reprojection"
+	@echo "... Segment"
 	@echo "... brute"
 	@echo "... edit_cache"
 	@echo "... main"
@@ -384,6 +422,9 @@ help:
 	@echo "... reprojection.o"
 	@echo "... reprojection.i"
 	@echo "... reprojection.s"
+	@echo "... segment.o"
+	@echo "... segment.i"
+	@echo "... segment.s"
 	@echo "... stereoBMtune.o"
 	@echo "... stereoBMtune.i"
 	@echo "... stereoBMtune.s"
