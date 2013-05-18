@@ -28,8 +28,13 @@ target_link_libraries( stereoVartune ${OpenCV_LIBS})
 
 add_library(DM depthmap.cpp)
 target_link_libraries( DM ${OpenCV_LIBS})
+
+add_library(Reprojection reprojection.cpp)
+target_link_libraries( Reprojection ${OpenCV_LIBS} ${PCL_LIBRARIES})
+
 add_executable( brute brute.cpp )
 target_link_libraries( brute ${OpenCV_LIBS})
+
 add_executable( main main.cpp )
-target_link_libraries( main ${OpenCV_LIBS} ${PCL_LIBRARIES} DM)
+target_link_libraries( main ${OpenCV_LIBS} ${PCL_LIBRARIES} DM Reprojection)
 

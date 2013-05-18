@@ -112,6 +112,19 @@ DM/fast:
 .PHONY : DM/fast
 
 #=============================================================================
+# Target rules for targets named Reprojection
+
+# Build rule for target.
+Reprojection: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Reprojection
+.PHONY : Reprojection
+
+# fast build rule for target.
+Reprojection/fast:
+	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/build
+.PHONY : Reprojection/fast
+
+#=============================================================================
 # Target rules for targets named brute
 
 # Build rule for target.
@@ -235,6 +248,30 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+reprojection.o: reprojection.cpp.o
+.PHONY : reprojection.o
+
+# target to build an object file
+reprojection.cpp.o:
+	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/reprojection.cpp.o
+.PHONY : reprojection.cpp.o
+
+reprojection.i: reprojection.cpp.i
+.PHONY : reprojection.i
+
+# target to preprocess a source file
+reprojection.cpp.i:
+	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/reprojection.cpp.i
+.PHONY : reprojection.cpp.i
+
+reprojection.s: reprojection.cpp.s
+.PHONY : reprojection.s
+
+# target to generate assembly for a file
+reprojection.cpp.s:
+	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/reprojection.cpp.s
+.PHONY : reprojection.cpp.s
+
 stereoBMtune.o: stereoBMtune.c.o
 .PHONY : stereoBMtune.o
 
@@ -290,6 +327,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... DM"
+	@echo "... Reprojection"
 	@echo "... brute"
 	@echo "... edit_cache"
 	@echo "... main"
@@ -305,6 +343,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... reprojection.o"
+	@echo "... reprojection.i"
+	@echo "... reprojection.s"
 	@echo "... stereoBMtune.o"
 	@echo "... stereoBMtune.i"
 	@echo "... stereoBMtune.s"

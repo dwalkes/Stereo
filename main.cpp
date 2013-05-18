@@ -18,6 +18,7 @@
 #include <time.h>
 
 #include "depthmap.h"
+#include "reprojection.h"
 
 cv::Mat toGray(const cv::Mat& rgb_image)
 {
@@ -63,7 +64,8 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
     return (viewer);
 }
 
-void reprojectCloud2(cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
+/*
+void straight_reproject_cloud(cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
     uchar pr, pg, pb;
     for (int i = 0; i < img_rgb.rows; i++)
@@ -90,7 +92,7 @@ void reprojectCloud2(cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<p
     }
 }
 
-void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
+void complex_reproject_cloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
     //Get the interesting parameters from Q
     double Q03, Q13, Q23, Q32, Q33;
@@ -141,6 +143,7 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
     point_cloud_ptr->height = 1;
 
 }
+*/
 
 int main( int argc, char** argv )
 {
@@ -188,8 +191,8 @@ int main( int argc, char** argv )
     std::cout << "Creating Point Cloud..." <<std::endl;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    //reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
-    reprojectCloud2(img_rgb, img_disparity, point_cloud_ptr); 
+    //complex_reproject_cloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
+    straight_reproject_cloud(img_rgb, img_disparity, point_cloud_ptr); 
 
     clock_t begin, end;
     double time_spent;

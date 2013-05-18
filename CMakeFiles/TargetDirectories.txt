@@ -1,4 +1,5 @@
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/DM.dir
+/home/kirill/coding/MyPy/Stereo/CMakeFiles/Reprojection.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/brute.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/main.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoBMtune.dir
