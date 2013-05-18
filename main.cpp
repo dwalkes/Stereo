@@ -239,8 +239,11 @@ int main( int argc, char** argv )
   }
       cv::imshow("rec2", to_show);
       cv::waitKey();*/
-    for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+    cv::Mat res = cv::Mat::zeros(288+0, 384+0, CV_8U);
+    //for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+    for(int j =0 ; j < clusters[3].indices.size(); j++)
     {
+        int i = clusters[3].indices[j];
         int x = point_cloud_ptr->at(i).x;
         int y = point_cloud_ptr->at(i).y;
         res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
