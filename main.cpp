@@ -63,9 +63,8 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
     return (viewer);
 }
 
-void reprojectCloud2(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
+void reprojectCloud2(cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
-    double px, py, pz;
     uchar pr, pg, pb;
     for (int i = 0; i < img_rgb.rows; i++)
     {
@@ -189,7 +188,8 @@ int main( int argc, char** argv )
     std::cout << "Creating Point Cloud..." <<std::endl;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    reprojectCloud2(Q, img_rgb, img_disparity, point_cloud_ptr); 
+    //reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
+    reprojectCloud2(img_rgb, img_disparity, point_cloud_ptr); 
 
     clock_t begin, end;
     double time_spent;
@@ -239,17 +239,20 @@ int main( int argc, char** argv )
   }
       cv::imshow("rec2", to_show);
       cv::waitKey();*/
-    cv::Mat res = cv::Mat::zeros(288+0, 384+0, CV_8U);
-    //for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
-    for(int j =0 ; j < clusters[3].indices.size(); j++)
+    for(int k = 0; k < clusters.size(); k++)
     {
-        int i = clusters[3].indices[j];
-        int x = point_cloud_ptr->at(i).x;
-        int y = point_cloud_ptr->at(i).y;
-        res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
+        cv::Mat res = cv::Mat::zeros(288+0, 384+0, CV_8U);
+        //for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+        for(int j =0 ; j < clusters[k].indices.size(); j++)
+        {
+            int i = clusters[k].indices[j];
+            int x = point_cloud_ptr->at(i).x;
+            int y = point_cloud_ptr->at(i).y;
+            res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
+        }
+        cv::imshow("rec2", res);
+        cv::waitKey();
     }
-    cv::imshow("rec2", res);
-    cv::waitKey();
     point_cloud_ptr = reg.getColoredCloud();
 
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
