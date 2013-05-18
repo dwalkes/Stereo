@@ -20,14 +20,6 @@
 #include "depthmap.h"
 #include "reprojection.h"
 
-cv::Mat toGray(const cv::Mat& rgb_image)
-{
-    cv::Mat res;
-    cv::cvtColor(rgb_image, res, CV_RGB2GRAY);
-    return res;
-}
-
-//pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
 pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
     pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
@@ -40,13 +32,13 @@ pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl
 
     pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
     reg.setMinClusterSize (100);
-    reg.setMaxClusterSize (20000);
+    reg.setMaxClusterSize (40000);
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (30);
     reg.setInputCloud (cloud);
     //reg.setIndices (indices);
     reg.setInputNormals (normals);
-    reg.setSmoothnessThreshold (10.0 / 180.0 * M_PI);
+    reg.setSmoothnessThreshold (12.0 / 180.0 * M_PI);
     reg.setCurvatureThreshold (1.0);
     return reg;
 }
@@ -110,7 +102,7 @@ int main( int argc, char** argv )
     //Load disparity image
     //cv::Mat img_disparity = getDepthMapVar(toGray(img_rgb), toGray(right_img)); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
     //cv::Mat img_disparity = normalize(getDepthMapBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
 
     //Show both images (for debug purposes)
     cv::namedWindow("rgb-image");
@@ -135,8 +127,6 @@ int main( int argc, char** argv )
     std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
     std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
-    std::cout << "These are the indices of the points of the initial" <<
-    std::endl << "cloud that belong to the first cluster:" << std::endl;
     int counter = 0;
     for(int k = 0; k < clusters.size(); k++)
     {

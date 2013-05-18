@@ -11,6 +11,7 @@ namespace dm
     cv::Mat getDepthMapSGBM(cv::Mat const &left, cv::Mat const &right);
     cv::Mat getDepthMapVar(cv::Mat const &left, cv::Mat const &right);
     cv::Mat getDepthMapBM(cv::Mat const &left, cv::Mat const &right);
+    cv::Mat toGray(const cv::Mat& rgb_image);
 }
 
 #endif

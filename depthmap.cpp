@@ -2,6 +2,13 @@
 
 namespace dm
 {
+    cv::Mat toGray(const cv::Mat& rgb_image)
+    {
+        cv::Mat res;
+        cv::cvtColor(rgb_image, res, CV_RGB2GRAY);
+        return res;
+    }
+
     cv::Mat normalize(cv::Mat const &depth_map)
     {
         double min;
