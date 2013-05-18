@@ -29,161 +29,158 @@ cv::Mat toGray(const cv::Mat& rgb_image)
 //pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
 pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
-  pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
-  pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
-  pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> normal_estimator;
-  normal_estimator.setSearchMethod (tree);
-  normal_estimator.setInputCloud (cloud);
-  normal_estimator.setKSearch (50);
-  normal_estimator.compute (*normals);
+    pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
+    pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
+    pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> normal_estimator;
+    normal_estimator.setSearchMethod (tree);
+    normal_estimator.setInputCloud (cloud);
+    normal_estimator.setKSearch (50);
+    normal_estimator.compute (*normals);
 
-  pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
-  reg.setMinClusterSize (100);
-  reg.setMaxClusterSize (20000);
-  reg.setSearchMethod (tree);
-  reg.setNumberOfNeighbours (30);
-  reg.setInputCloud (cloud);
-  //reg.setIndices (indices);
-  reg.setInputNormals (normals);
-  reg.setSmoothnessThreshold (10.0 / 180.0 * M_PI);
-  reg.setCurvatureThreshold (1.0);
-  return reg;
+    pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
+    reg.setMinClusterSize (100);
+    reg.setMaxClusterSize (20000);
+    reg.setSearchMethod (tree);
+    reg.setNumberOfNeighbours (30);
+    reg.setInputCloud (cloud);
+    //reg.setIndices (indices);
+    reg.setInputNormals (normals);
+    reg.setSmoothnessThreshold (10.0 / 180.0 * M_PI);
+    reg.setCurvatureThreshold (1.0);
+    return reg;
 }
 
 //This function creates a PCL visualizer, sets the point cloud to view and returns a pointer
 boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
 {
-  boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-  viewer->setBackgroundColor (0, 0, 0);
-  pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
-  viewer->addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "reconstruction");
-  //viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "reconstruction");
-  viewer->addCoordinateSystem ( 1.0 );
-  viewer->initCameraParameters ();
-  return (viewer);
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+    viewer->setBackgroundColor (0, 0, 0);
+    pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+    viewer->addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "reconstruction");
+    //viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "reconstruction");
+    viewer->addCoordinateSystem ( 1.0 );
+    viewer->initCameraParameters ();
+    return (viewer);
 }
 
 void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
-  //Get the interesting parameters from Q
-  double Q03, Q13, Q23, Q32, Q33;
-  Q03 = Q.at<double>(0,3);
-  Q13 = Q.at<double>(1,3);
-  Q23 = Q.at<double>(2,3);
-  Q32 = Q.at<double>(3,2);
-  Q33 = Q.at<double>(3,3);
-  
-  std::cout << "Q(0,3) = "<< Q03 <<"; Q(1,3) = "<< Q13 <<"; Q(2,3) = "<< Q23 <<"; Q(3,2) = "<< Q32 <<"; Q(3,3) = "<< Q33 <<";" << std::endl;
-  
-  double px, py, pz;
-  uchar pr, pg, pb;
-  
-  for (int i = 0; i < img_rgb.rows; i++)
-  {
-    uchar* rgb_ptr = img_rgb.ptr<uchar>(i);
-    uchar* disp_ptr = img_disparity.ptr<uchar>(i);
-    for (int j = 0; j < img_rgb.cols; j++)
+    //Get the interesting parameters from Q
+    double Q03, Q13, Q23, Q32, Q33;
+    Q03 = Q.at<double>(0,3);
+    Q13 = Q.at<double>(1,3);
+    Q23 = Q.at<double>(2,3);
+    Q32 = Q.at<double>(3,2);
+    Q33 = Q.at<double>(3,3);
+
+    std::cout << "Q(0,3) = "<< Q03 <<"; Q(1,3) = "<< Q13 <<"; Q(2,3) = "<< Q23 <<"; Q(3,2) = "<< Q32 <<"; Q(3,3) = "<< Q33 <<";" << std::endl;
+
+    double px, py, pz;
+    uchar pr, pg, pb;
+
+    for (int i = 0; i < img_rgb.rows; i++)
     {
-      //Get 3D coordinates
-      uchar d = disp_ptr[j];
-      if ( d == 0 ) continue; //Discard bad pixels
-      double pw = -1.0 * static_cast<double>(d) * Q32 + Q33; 
-      px = static_cast<double>(j) + Q03;
-      py = static_cast<double>(i) + Q13;
-      pz = Q23;
-      
-      px = px/pw;
-      py = py/pw;
-      pz = pz/pw;
-      //Get RGB info
-      pb = rgb_ptr[3*j];
-      pg = rgb_ptr[3*j+1];
-      pr = rgb_ptr[3*j+2];
-      //Insert info into point cloud structure
-      pcl::PointXYZRGB point;
-      point.x = px;
-      point.y = py;
-      point.z = pz;
-      uint32_t rgb = (static_cast<uint32_t>(pr) << 16 |
-              static_cast<uint32_t>(pg) << 8 | static_cast<uint32_t>(pb));
-      point.rgb = *reinterpret_cast<float*>(&rgb);
-      point_cloud_ptr->push_back (point);
+        uchar* rgb_ptr = img_rgb.ptr<uchar>(i);
+        uchar* disp_ptr = img_disparity.ptr<uchar>(i);
+        for (int j = 0; j < img_rgb.cols; j++)
+        {
+            //Get 3D coordinates
+            uchar d = disp_ptr[j];
+            if ( d == 0 ) continue; //Discard bad pixels
+            double pw = -1.0 * static_cast<double>(d) * Q32 + Q33; 
+            px = static_cast<double>(j) + Q03;
+            py = static_cast<double>(i) + Q13;
+            pz = Q23;
+
+            px = px/pw;
+            py = py/pw;
+            pz = pz/pw;
+            //Get RGB info
+            pb = rgb_ptr[3*j];
+            pg = rgb_ptr[3*j+1];
+            pr = rgb_ptr[3*j+2];
+            //Insert info into point cloud structure
+            pcl::PointXYZRGB point;
+            point.x = px;
+            point.y = py;
+            point.z = pz;
+            uint32_t rgb = (static_cast<uint32_t>(pr) << 16 |
+                  static_cast<uint32_t>(pg) << 8 | static_cast<uint32_t>(pb));
+            point.rgb = *reinterpret_cast<float*>(&rgb);
+            point_cloud_ptr->push_back (point);
+        }
     }
-  }
-  point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
-  point_cloud_ptr->height = 1;
+    point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
+    point_cloud_ptr->height = 1;
 
 }
 
 int main( int argc, char** argv )
 {
-  //Check arguments
-  if (argc != 4)
-  {
-    std::cerr << "Usage: " << argv[0] << " <path-to-Q-matrix> <left image> <right image> " << std::endl;
-    return 1;
-  }
+    //Check arguments
+    if (argc != 4)
+    {
+        std::cerr << "Usage: " << argv[0] << " <path-to-Q-matrix> <left image> <right image> " << std::endl;
+        return 1;
+    }
 
-  //Load Matrix Q
-  cv::FileStorage fs(argv[1], cv::FileStorage::READ);
-  cv::Mat Q;
-  
-  fs["Q"] >> Q;
-  
-  //If size of Q is not 4x4 exit
-  if (Q.cols != 4 || Q.rows != 4)
-  {
-    std::cerr << "ERROR: Could not read matrix Q (doesn't exist or size is not 4x4)" << std::endl;
-    return 1;
-  }
+    //Load Matrix Q
+    cv::FileStorage fs(argv[1], cv::FileStorage::READ);
+    cv::Mat Q;
 
-  std::cout << "Read matrix in file " << argv[1] << std::endl;
-  cv::Mat img_rgb = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
-  cv::Mat right_img = cv::imread(argv[3], CV_LOAD_IMAGE_COLOR);
-  if (img_rgb.data == NULL)
-  {
-    std::cerr << "ERROR: Could not read rgb-image: " << argv[2] << std::endl;
-    return 1;
-  }
-  
-  //Load disparity image
-  //cv::Mat img_disparity = getDepthMapVar(toGray(img_rgb), toGray(right_img)); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-  //cv::Mat img_disparity = normalize(getDepthMapBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-  cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-  
-  //Show both images (for debug purposes)
-  cv::namedWindow("rgb-image");
-  cv::namedWindow("disparity-image");
-  cv::imshow("rbg-image", img_rgb);
-  cv::imshow("disparity-image", img_disparity);
-  std::cout << "Press a key to continue..." << std::endl;
-  cv::waitKey(1);
-  //cv::destroyWindow("rgb-image");
-  //cv::destroyWindow("disparity-image");
-  //Create point cloud and fill it
-  std::cout << "Creating Point Cloud..." <<std::endl;
-  pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
+    fs["Q"] >> Q;
 
-  reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
+    //If size of Q is not 4x4 exit
+    if (Q.cols != 4 || Q.rows != 4)
+    {
+        std::cerr << "ERROR: Could not read matrix Q (doesn't exist or size is not 4x4)" << std::endl;
+        return 1;
+    }
 
-  clock_t begin, end;
-  double time_spent;
-  begin = clock();
-  auto reg = getColored(point_cloud_ptr);
-  end = clock();
-  std::cout <<"time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
+    std::cout << "Read matrix in file " << argv[1] << std::endl;
+    cv::Mat img_rgb = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
+    cv::Mat right_img = cv::imread(argv[3], CV_LOAD_IMAGE_COLOR);
+    if (img_rgb.data == NULL)
+    {
+        std::cerr << "ERROR: Could not read rgb-image: " << argv[2] << std::endl;
+        return 1;
+    }
 
-  std::vector <pcl::PointIndices> clusters, tmp_clusters;
-  reg.extract (tmp_clusters);
-  for(int i = 0; i < tmp_clusters.size(); i++)
-  {
-      if(tmp_clusters[i].indices.size() > 0)
+    //Load disparity image
+    //cv::Mat img_disparity = getDepthMapVar(toGray(img_rgb), toGray(right_img)); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
+    //cv::Mat img_disparity = normalize(getDepthMapBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
+
+    //Show both images (for debug purposes)
+    cv::namedWindow("rgb-image");
+    cv::namedWindow("disparity-image");
+    cv::imshow("rbg-image", img_rgb);
+    cv::imshow("disparity-image", img_disparity);
+    std::cout << "Press a key to continue..." << std::endl;
+    cv::waitKey(1);
+    std::cout << "Creating Point Cloud..." <<std::endl;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
+
+    clock_t begin, end;
+    double time_spent;
+    begin = clock();
+    auto reg = getColored(point_cloud_ptr);
+    end = clock();
+    std::cout <<"time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
+
+    std::vector <pcl::PointIndices> clusters, tmp_clusters;
+    reg.extract (tmp_clusters);
+    for(int i = 0; i < tmp_clusters.size(); i++)
+    {
+        if(tmp_clusters[i].indices.size() > 0)
         clusters.push_back(tmp_clusters[i]);
-  }
+    }
 
-  std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
-  std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
-  std::cout << "These are the indices of the points of the initial" <<
+    std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
+    std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
+    std::cout << "These are the indices of the points of the initial" <<
     std::endl << "cloud that belong to the first cluster:" << std::endl;
   //384 288
   /*for(int j = 0; j < clusters.size(); j++)
@@ -241,22 +238,22 @@ int main( int argc, char** argv )
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
     viewer = createVisualizer( point_cloud_ptr );
   
-  int counter = 0;
-  while ( !viewer->wasStopped())
-  {
-    viewer->spinOnce(100);
-    boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-    viewer->removeAllPointClouds();
-    viewer->removeAllShapes();
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr tmp_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-    for(int i = 0; i < clusters[counter].indices.size(); i++)
+    int counter = 0;
+    while ( !viewer->wasStopped())
     {
-        tmp_cloud->push_back(point_cloud_ptr->at(clusters[counter].indices[i]));
+        viewer->spinOnce(100);
+        boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+        viewer->removeAllPointClouds();
+        viewer->removeAllShapes();
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr tmp_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+        for(int i = 0; i < clusters[counter].indices.size(); i++)
+        {
+            tmp_cloud->push_back(point_cloud_ptr->at(clusters[counter].indices[i]));
+        }
+        pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(tmp_cloud);
+        viewer->addPointCloud<pcl::PointXYZRGB> (tmp_cloud, rgb, "reconstruction");
+        counter++;
     }
-    pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(tmp_cloud);
-    viewer->addPointCloud<pcl::PointXYZRGB> (tmp_cloud, rgb, "reconstruction");
-    counter++;
-  }
-  
-  return 0;
+
+    return 0;
 }
