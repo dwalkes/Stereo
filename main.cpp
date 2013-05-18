@@ -26,7 +26,8 @@ cv::Mat toGray(const cv::Mat& rgb_image)
     return res;
 }
 
-pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
+//pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
+pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
   pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
   pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
@@ -46,73 +47,7 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
   reg.setInputNormals (normals);
   reg.setSmoothnessThreshold (10.0 / 180.0 * M_PI);
   reg.setCurvatureThreshold (1.0);
-
-  std::vector <pcl::PointIndices> clusters, tmp_clusters;
-  reg.extract (tmp_clusters);
-  for(int i = 0; i < tmp_clusters.size(); i++)
-  {
-      if(tmp_clusters[i].indices.size() > 0)
-        clusters.push_back(tmp_clusters[i]);
-  }
-
-  std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
-  std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
-  std::cout << "These are the indices of the points of the initial" <<
-    std::endl << "cloud that belong to the first cluster:" << std::endl;
-  int counter = 0;
-  //384 288
-  /*for(int j = 0; j < clusters.size(); j++)
-  {
-      cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
-      std::cout <<j << " " << clusters[j].indices.size() << std::endl;
-      for(int i = 0; i < clusters[j].indices.size(); i++)
-      {
-        //std::cout << clusters[j].indices[i] << std::endl;
-        //std::cout << cloud->at(clusters[j].indices[i])<< std:: endl;
-        to_show.data[clusters[j].indices[i]] = 200;
-        //to_show.at<uchar>(clusters[j].indices[i]/cloud->height, clusters[j].indices[i]%cloud->height) = 200;
-        //to_show.at<bool>((int)(cloud->at(clusters[j].indices[i]).y), (int)(cloud->at(clusters[j].indices[i]).x)) = 200;
-        counter++;
-      }
-      cv::imshow("", to_show);
-      cv::waitKey();
-  }*/
-  /*cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
-  for(int i = 0; i < cloud->height; i++)
-  {
-    for(int j = 0; j < cloud->width; j++)
-    {
-        to_show.at<uchar>(i, j) = cloud->at(counter).z;
-        counter++;
-    }
-  }
-      cv::imshow("rec2", to_show);
-      cv::waitKey();*/
-    double minX = 10000000, maxX = -100000000, minY = 10000000, maxY = -1000000000, minZ = 1000000000, maxZ = -1000000000;
-    for(int i =0 ; i < cloud->points.size(); i++)
-    {
-        if(cloud->at(i).x > maxX) maxX = cloud->at(i).x;
-        if(cloud->at(i).y > maxY) maxY = cloud->at(i).y;
-        if(cloud->at(i).x < minX) minX = cloud->at(i).x;
-        if(cloud->at(i).y < minY) minY = cloud->at(i).y;
-        if(cloud->at(i).z < minZ) minZ = cloud->at(i).z;
-        if(cloud->at(i).z > maxZ) maxZ = cloud->at(i).z;
-    }
-    std::cout<<"minX" << minX << "maxX" << maxX << "minY" << minY<< "maxY" << maxY<<"minZ"<<minZ<<"maxZ"<<maxZ<<"\n";
-    int width = (maxX - minX), height = (maxY - minY);
-    //double dx = width/384.0, dy = height/288.0;
-    double dx = width/600.0, dy = height/500.0;
-    cv::Mat res = cv::Mat::zeros(288+300, 384+300, CV_8U);
-    for(int i =0 ; i < cloud->points.size(); i++)
-    {
-        int x = (cloud->at(i).x - minX)/dx;
-        int y = (cloud->at(i).y - minY)/dy;
-        res.at<uchar>(y, x) = 2*(int)(cloud->at(i).z);
-    }
-      cv::imshow("rec2", res);
-      cv::waitKey();
- 
-  return reg.getColoredCloud();
+  return reg;
 }
 
 //This function creates a PCL visualizer, sets the point cloud to view and returns a pointer
@@ -234,17 +169,93 @@ int main( int argc, char** argv )
   clock_t begin, end;
   double time_spent;
   begin = clock();
-  point_cloud_ptr = getColored(point_cloud_ptr);
+  auto reg = getColored(point_cloud_ptr);
   end = clock();
   std::cout <<"time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
 
-  boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-  viewer = createVisualizer( point_cloud_ptr );
+  std::vector <pcl::PointIndices> clusters, tmp_clusters;
+  reg.extract (tmp_clusters);
+  for(int i = 0; i < tmp_clusters.size(); i++)
+  {
+      if(tmp_clusters[i].indices.size() > 0)
+        clusters.push_back(tmp_clusters[i]);
+  }
+
+  std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
+  std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
+  std::cout << "These are the indices of the points of the initial" <<
+    std::endl << "cloud that belong to the first cluster:" << std::endl;
+  //384 288
+  /*for(int j = 0; j < clusters.size(); j++)
+  {
+      cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
+      std::cout <<j << " " << clusters[j].indices.size() << std::endl;
+      for(int i = 0; i < clusters[j].indices.size(); i++)
+      {
+        //std::cout << clusters[j].indices[i] << std::endl;
+        //std::cout << cloud->at(clusters[j].indices[i])<< std:: endl;
+        to_show.data[clusters[j].indices[i]] = 200;
+        //to_show.at<uchar>(clusters[j].indices[i]/cloud->height, clusters[j].indices[i]%cloud->height) = 200;
+        //to_show.at<bool>((int)(cloud->at(clusters[j].indices[i]).y), (int)(cloud->at(clusters[j].indices[i]).x)) = 200;
+        counter++;
+      }
+      cv::imshow("", to_show);
+      cv::waitKey();
+  }*/
+  /*cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
+  for(int i = 0; i < cloud->height; i++)
+  {
+    for(int j = 0; j < cloud->width; j++)
+    {
+        to_show.at<uchar>(i, j) = cloud->at(counter).z;
+        counter++;
+    }
+  }
+      cv::imshow("rec2", to_show);
+      cv::waitKey();*/
+    double minX = 10000000, maxX = -100000000, minY = 10000000, maxY = -1000000000, minZ = 1000000000, maxZ = -1000000000;
+    for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+    {
+        if(point_cloud_ptr->at(i).x > maxX) maxX = point_cloud_ptr->at(i).x;
+        if(point_cloud_ptr->at(i).y > maxY) maxY = point_cloud_ptr->at(i).y;
+        if(point_cloud_ptr->at(i).x < minX) minX = point_cloud_ptr->at(i).x;
+        if(point_cloud_ptr->at(i).y < minY) minY = point_cloud_ptr->at(i).y;
+        if(point_cloud_ptr->at(i).z < minZ) minZ = point_cloud_ptr->at(i).z;
+        if(point_cloud_ptr->at(i).z > maxZ) maxZ = point_cloud_ptr->at(i).z;
+    }
+    std::cout<<"minX" << minX << "maxX" << maxX << "minY" << minY<< "maxY" << maxY<<"minZ"<<minZ<<"maxZ"<<maxZ<<"\n";
+    int width = (maxX - minX), height = (maxY - minY);
+    //double dx = width/384.0, dy = height/288.0;
+    double dx = width/600.0, dy = height/500.0;
+    cv::Mat res = cv::Mat::zeros(288+300, 384+300, CV_8U);
+    for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+    {
+        int x = (point_cloud_ptr->at(i).x - minX)/dx;
+        int y = (point_cloud_ptr->at(i).y - minY)/dy;
+        res.at<uchar>(y, x) = 2*(int)(point_cloud_ptr->at(i).z);
+    }
+    cv::imshow("rec2", res);
+    cv::waitKey();
+    point_cloud_ptr = reg.getColoredCloud();
+
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+    viewer = createVisualizer( point_cloud_ptr );
   
+  int counter = 0;
   while ( !viewer->wasStopped())
   {
     viewer->spinOnce(100);
     boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+    viewer->removeAllPointClouds();
+    viewer->removeAllShapes();
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr tmp_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+    for(int i = 0; i < clusters[counter].indices.size(); i++)
+    {
+        tmp_cloud->push_back(point_cloud_ptr->at(clusters[counter].indices[i]));
+    }
+    pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(tmp_cloud);
+    viewer->addPointCloud<pcl::PointXYZRGB> (tmp_cloud, rgb, "reconstruction");
+    counter++;
   }
   
   return 0;
