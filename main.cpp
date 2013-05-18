@@ -129,9 +129,10 @@ int main( int argc, char** argv )
     double time_spent;
     begin = clock();
     auto reg = getColored(point_cloud_ptr);
-    end = clock();
-    std::cout <<"time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
     auto clusters = getFilteredClusters(reg);
+    end = clock();
+
+    std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
     std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
     std::cout << "These are the indices of the points of the initial" <<
