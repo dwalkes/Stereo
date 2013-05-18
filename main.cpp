@@ -63,6 +63,34 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
     return (viewer);
 }
 
+void reprojectCloud2(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
+{
+    double px, py, pz;
+    uchar pr, pg, pb;
+    for (int i = 0; i < img_rgb.rows; i++)
+    {
+        uchar* rgb_ptr = img_rgb.ptr<uchar>(i);
+        uchar* disp_ptr = img_disparity.ptr<uchar>(i);
+        for (int j = 0; j < img_rgb.cols; j++)
+        {
+            uchar d = disp_ptr[j];
+            if ( d == 0 ) continue; //Discard bad pixels
+            pb = rgb_ptr[3*j];
+            pg = rgb_ptr[3*j+1];
+            pr = rgb_ptr[3*j+2];
+            //Insert info into point cloud structure
+            pcl::PointXYZRGB point;
+            point.x = j;
+            point.y = i;
+            point.z = d;
+            uint32_t rgb = (static_cast<uint32_t>(pr) << 16 |
+                  static_cast<uint32_t>(pg) << 8 | static_cast<uint32_t>(pb));
+            point.rgb = *reinterpret_cast<float*>(&rgb);
+            point_cloud_ptr->push_back (point);
+        } 
+    }
+}
+
 void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& point_cloud_ptr)
 {
     //Get the interesting parameters from Q
@@ -161,7 +189,7 @@ int main( int argc, char** argv )
     std::cout << "Creating Point Cloud..." <<std::endl;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    reprojectCloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
+    reprojectCloud2(Q, img_rgb, img_disparity, point_cloud_ptr); 
 
     clock_t begin, end;
     double time_spent;
@@ -183,6 +211,7 @@ int main( int argc, char** argv )
     std::cout << "These are the indices of the points of the initial" <<
     std::endl << "cloud that belong to the first cluster:" << std::endl;
   //384 288
+  int counter = 0;
   /*for(int j = 0; j < clusters.size(); j++)
   {
       cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
@@ -200,11 +229,11 @@ int main( int argc, char** argv )
       cv::waitKey();
   }*/
   /*cv::Mat to_show = cv::Mat::zeros(288, 384, cv::DataType<uchar>::type);
-  for(int i = 0; i < cloud->height; i++)
+  for(int i = 0; i < point_cloud_ptr->height; i++)
   {
-    for(int j = 0; j < cloud->width; j++)
+    for(int j = 0; j < point_cloud_ptr->width; j++)
     {
-        to_show.at<uchar>(i, j) = cloud->at(counter).z;
+        to_show.at<uchar>(i, j) = point_cloud_ptr->at(counter).z;
         counter++;
     }
   }
@@ -224,12 +253,14 @@ int main( int argc, char** argv )
     int width = (maxX - minX), height = (maxY - minY);
     //double dx = width/384.0, dy = height/288.0;
     double dx = width/600.0, dy = height/500.0;
-    cv::Mat res = cv::Mat::zeros(288+300, 384+300, CV_8U);
+    cv::Mat res = cv::Mat::zeros(288+0, 384+0, CV_8U);
     for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
     {
-        int x = (point_cloud_ptr->at(i).x - minX)/dx;
-        int y = (point_cloud_ptr->at(i).y - minY)/dy;
-        res.at<uchar>(y, x) = 2*(int)(point_cloud_ptr->at(i).z);
+        //int x = (point_cloud_ptr->at(i).x - minX)/dx;
+        //int y = (point_cloud_ptr->at(i).y - minY)/dy;
+        int x = point_cloud_ptr->at(i).x;
+        int y = point_cloud_ptr->at(i).y;
+        res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
     }
     cv::imshow("rec2", res);
     cv::waitKey();
@@ -238,12 +269,11 @@ int main( int argc, char** argv )
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
     viewer = createVisualizer( point_cloud_ptr );
   
-    int counter = 0;
     while ( !viewer->wasStopped())
     {
         viewer->spinOnce(100);
         boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-        viewer->removeAllPointClouds();
+        /*viewer->removeAllPointClouds();
         viewer->removeAllShapes();
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr tmp_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
         for(int i = 0; i < clusters[counter].indices.size(); i++)
@@ -253,6 +283,7 @@ int main( int argc, char** argv )
         pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(tmp_cloud);
         viewer->addPointCloud<pcl::PointXYZRGB> (tmp_cloud, rgb, "reconstruction");
         counter++;
+        if(counter >= clusters.size()) counter = 0;*/
     }
 
     return 0;
