@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project( OpenCVReprojectImageToPointCloud )
 
 SET (CMAKE_CXX_COMPILER  "/usr/bin/clang++")
-SET (CMAKE_CXX_FLAGS "-Wall -std=c++11")
+SET (CMAKE_CXX_FLAGS "-Wall --std=c++11")
 
 find_package( PCL 1.2 REQUIRED )
 
