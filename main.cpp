@@ -43,7 +43,7 @@ pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl
     return reg;
 }
 
-std::vector <pcl::PointIndices> getFilteredClusters(pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal>& reg)
+std::vector <pcl::PointIndices> getClusters(pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal>& reg)
 {
     std::vector <pcl::PointIndices> clusters, tmp_clusters;
     reg.extract (tmp_clusters);
@@ -121,7 +121,7 @@ int main( int argc, char** argv )
     double time_spent;
     begin = clock();
     auto reg = getColored(point_cloud_ptr);
-    auto clusters = getFilteredClusters(reg);
+    auto clusters = getClusters(reg);
     end = clock();
 
     std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
