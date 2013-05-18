@@ -61,5 +61,6 @@ SET(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/brute.dir/DependInfo.cmake"
   "CMakeFiles/main.dir/DependInfo.cmake"
   "CMakeFiles/stereoBMtune.dir/DependInfo.cmake"
+  "CMakeFiles/stereoSGBMtune.dir/DependInfo.cmake"
   "CMakeFiles/stereoVartune.dir/DependInfo.cmake"
   )

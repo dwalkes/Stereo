@@ -3,4 +3,5 @@
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/brute.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/main.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoBMtune.dir
+/home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoSGBMtune.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/stereoVartune.dir

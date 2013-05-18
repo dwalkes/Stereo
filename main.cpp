@@ -68,41 +68,39 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
     return (viewer);
 }
 
+void showClustersSeparetly(const cv::Mat& img_rgb, const pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr, std::vector<pcl::PointIndices> &clusters)
+{
+    for(int k = 0; k < clusters.size(); k++)
+    {
+        cv::Mat res = cv::Mat::zeros(img_rgb.rows, img_rgb.cols, CV_8U);
+        //for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
+        for(int j =0 ; j < clusters[k].indices.size(); j++)
+        {
+            int i = clusters[k].indices[j];
+            int x = point_cloud_ptr->at(i).x;
+            int y = point_cloud_ptr->at(i).y;
+            res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
+        }
+        cv::imshow("rec2", res);
+        cv::waitKey();
+    }
+
+}
+
 int main( int argc, char** argv )
 {
     //Check arguments
-    if (argc != 4)
+    if (argc != 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <path-to-Q-matrix> <left image> <right image> " << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <left image> <right image> " << std::endl;
         return 1;
     }
 
-    //Load Matrix Q
-    cv::FileStorage fs(argv[1], cv::FileStorage::READ);
-    cv::Mat Q;
-
-    fs["Q"] >> Q;
-
-    //If size of Q is not 4x4 exit
-    if (Q.cols != 4 || Q.rows != 4)
-    {
-        std::cerr << "ERROR: Could not read matrix Q (doesn't exist or size is not 4x4)" << std::endl;
-        return 1;
-    }
-
-    std::cout << "Read matrix in file " << argv[1] << std::endl;
-    cv::Mat img_rgb = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
-    cv::Mat right_img = cv::imread(argv[3], CV_LOAD_IMAGE_COLOR);
-    if (img_rgb.data == NULL)
-    {
-        std::cerr << "ERROR: Could not read rgb-image: " << argv[2] << std::endl;
-        return 1;
-    }
-
-    //Load disparity image
-    //cv::Mat img_disparity = getDepthMapVar(toGray(img_rgb), toGray(right_img)); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-    //cv::Mat img_disparity = normalize(getDepthMapBM(toGray(img_rgb), toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); //cv::imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_rgb = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    cv::Mat right_img = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
+    //cv::Mat img_disparity = dm::getDepthMapVar(dm::toGray(img_rgb), dm::toGray(right_img)); 
+    //cv::Mat img_disparity = dm::normalize(dm::getDepthMapBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
+    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
 
     //Show both images (for debug purposes)
     cv::namedWindow("rgb-image");
@@ -126,22 +124,9 @@ int main( int argc, char** argv )
 
     std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
-    std::cout << "First cluster has " << clusters[0].indices.size () << " points." << endl;
     int counter = 0;
-    for(int k = 0; k < clusters.size(); k++)
-    {
-        cv::Mat res = cv::Mat::zeros(img_rgb.rows, img_rgb.cols, CV_8U);
-        //for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
-        for(int j =0 ; j < clusters[k].indices.size(); j++)
-        {
-            int i = clusters[k].indices[j];
-            int x = point_cloud_ptr->at(i).x;
-            int y = point_cloud_ptr->at(i).y;
-            res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
-        }
-        cv::imshow("rec2", res);
-        cv::waitKey();
-    }
+    showClustersSeparetly(img_rgb, point_cloud_ptr, clusters);
+
     point_cloud_ptr = reg.getColoredCloud();
 
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;

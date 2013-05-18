@@ -161,8 +161,8 @@ clean: CMakeFiles/brute.dir/clean
 # Target rules for target CMakeFiles/main.dir
 
 # All Build rule for target.
-CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/DM.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  4
@@ -229,13 +229,48 @@ clean: CMakeFiles/stereoBMtune.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/stereoSGBMtune.dir
+
+# All Build rule for target.
+CMakeFiles/stereoSGBMtune.dir/all:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/depend
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  6
+	@echo "Built target stereoSGBMtune"
+.PHONY : CMakeFiles/stereoSGBMtune.dir/all
+
+# Include target in all.
+all: CMakeFiles/stereoSGBMtune.dir/all
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/stereoSGBMtune.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirill/coding/MyPy/Stereo/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/stereoSGBMtune.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirill/coding/MyPy/Stereo/CMakeFiles 0
+.PHONY : CMakeFiles/stereoSGBMtune.dir/rule
+
+# Convenience name for target.
+stereoSGBMtune: CMakeFiles/stereoSGBMtune.dir/rule
+.PHONY : stereoSGBMtune
+
+# clean rule for target.
+CMakeFiles/stereoSGBMtune.dir/clean:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/clean
+.PHONY : CMakeFiles/stereoSGBMtune.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/stereoSGBMtune.dir/clean
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/stereoVartune.dir
 
 # All Build rule for target.
 CMakeFiles/stereoVartune.dir/all:
 	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/depend
 	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  6
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  7
 	@echo "Built target stereoVartune"
 .PHONY : CMakeFiles/stereoVartune.dir/all
 

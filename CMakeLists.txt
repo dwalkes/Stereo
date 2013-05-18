@@ -26,6 +26,9 @@ target_link_libraries( stereoBMtune ${OpenCV_LIBS} ${GTK2_LIBRARIES})
 add_executable( stereoVartune stereoVartune.cpp )
 target_link_libraries( stereoVartune ${OpenCV_LIBS})
 
+add_executable( stereoSGBMtune stereoSGBMtune.cpp )
+target_link_libraries( stereoSGBMtune ${OpenCV_LIBS})
+
 add_library(DM depthmap.cpp)
 target_link_libraries( DM ${OpenCV_LIBS})
 

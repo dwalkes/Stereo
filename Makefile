@@ -164,6 +164,19 @@ stereoBMtune/fast:
 .PHONY : stereoBMtune/fast
 
 #=============================================================================
+# Target rules for targets named stereoSGBMtune
+
+# Build rule for target.
+stereoSGBMtune: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 stereoSGBMtune
+.PHONY : stereoSGBMtune
+
+# fast build rule for target.
+stereoSGBMtune/fast:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/build
+.PHONY : stereoSGBMtune/fast
+
+#=============================================================================
 # Target rules for targets named stereoVartune
 
 # Build rule for target.
@@ -296,6 +309,30 @@ stereoBMtune.c.s:
 	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/stereoBMtune.c.s
 .PHONY : stereoBMtune.c.s
 
+stereoSGBMtune.o: stereoSGBMtune.cpp.o
+.PHONY : stereoSGBMtune.o
+
+# target to build an object file
+stereoSGBMtune.cpp.o:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/stereoSGBMtune.cpp.o
+.PHONY : stereoSGBMtune.cpp.o
+
+stereoSGBMtune.i: stereoSGBMtune.cpp.i
+.PHONY : stereoSGBMtune.i
+
+# target to preprocess a source file
+stereoSGBMtune.cpp.i:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/stereoSGBMtune.cpp.i
+.PHONY : stereoSGBMtune.cpp.i
+
+stereoSGBMtune.s: stereoSGBMtune.cpp.s
+.PHONY : stereoSGBMtune.s
+
+# target to generate assembly for a file
+stereoSGBMtune.cpp.s:
+	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/stereoSGBMtune.cpp.s
+.PHONY : stereoSGBMtune.cpp.s
+
 stereoVartune.o: stereoVartune.cpp.o
 .PHONY : stereoVartune.o
 
@@ -333,6 +370,7 @@ help:
 	@echo "... main"
 	@echo "... rebuild_cache"
 	@echo "... stereoBMtune"
+	@echo "... stereoSGBMtune"
 	@echo "... stereoVartune"
 	@echo "... brute.o"
 	@echo "... brute.i"
@@ -349,6 +387,9 @@ help:
 	@echo "... stereoBMtune.o"
 	@echo "... stereoBMtune.i"
 	@echo "... stereoBMtune.s"
+	@echo "... stereoSGBMtune.o"
+	@echo "... stereoSGBMtune.i"
+	@echo "... stereoSGBMtune.s"
 	@echo "... stereoVartune.o"
 	@echo "... stereoVartune.i"
 	@echo "... stereoVartune.s"
