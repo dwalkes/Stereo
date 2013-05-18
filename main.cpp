@@ -239,25 +239,8 @@ int main( int argc, char** argv )
   }
       cv::imshow("rec2", to_show);
       cv::waitKey();*/
-    double minX = 10000000, maxX = -100000000, minY = 10000000, maxY = -1000000000, minZ = 1000000000, maxZ = -1000000000;
     for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
     {
-        if(point_cloud_ptr->at(i).x > maxX) maxX = point_cloud_ptr->at(i).x;
-        if(point_cloud_ptr->at(i).y > maxY) maxY = point_cloud_ptr->at(i).y;
-        if(point_cloud_ptr->at(i).x < minX) minX = point_cloud_ptr->at(i).x;
-        if(point_cloud_ptr->at(i).y < minY) minY = point_cloud_ptr->at(i).y;
-        if(point_cloud_ptr->at(i).z < minZ) minZ = point_cloud_ptr->at(i).z;
-        if(point_cloud_ptr->at(i).z > maxZ) maxZ = point_cloud_ptr->at(i).z;
-    }
-    std::cout<<"minX" << minX << "maxX" << maxX << "minY" << minY<< "maxY" << maxY<<"minZ"<<minZ<<"maxZ"<<maxZ<<"\n";
-    int width = (maxX - minX), height = (maxY - minY);
-    //double dx = width/384.0, dy = height/288.0;
-    double dx = width/600.0, dy = height/500.0;
-    cv::Mat res = cv::Mat::zeros(288+0, 384+0, CV_8U);
-    for(int i =0 ; i < point_cloud_ptr->points.size(); i++)
-    {
-        //int x = (point_cloud_ptr->at(i).x - minX)/dx;
-        //int y = (point_cloud_ptr->at(i).y - minY)/dy;
         int x = point_cloud_ptr->at(i).x;
         int y = point_cloud_ptr->at(i).y;
         res.at<uchar>(y, x) = (int)(point_cloud_ptr->at(i).z);
