@@ -100,8 +100,9 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr getColored(pcl::PointCloud<pcl::PointXYZR
     }
     std::cout<<"minX" << minX << "maxX" << maxX << "minY" << minY<< "maxY" << maxY<<"minZ"<<minZ<<"maxZ"<<maxZ<<"\n";
     int width = (maxX - minX), height = (maxY - minY);
-    double dx = width/384.0, dy = height/288.0;
-    cv::Mat res = cv::Mat::zeros(288+10, 384+10, CV_8U);
+    //double dx = width/384.0, dy = height/288.0;
+    double dx = width/600.0, dy = height/500.0;
+    cv::Mat res = cv::Mat::zeros(288+300, 384+300, CV_8U);
     for(int i =0 ; i < cloud->points.size(); i++)
     {
         int x = (cloud->at(i).x - minX)/dx;
@@ -174,8 +175,8 @@ void reprojectCloud(const cv::Mat& Q, cv::Mat& img_rgb, cv::Mat& img_disparity, 
       point_cloud_ptr->push_back (point);
     }
   }
-  //point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
-  //point_cloud_ptr->height = 1;
+  point_cloud_ptr->width = (int) point_cloud_ptr->points.size();
+  point_cloud_ptr->height = 1;
 
 }
 
