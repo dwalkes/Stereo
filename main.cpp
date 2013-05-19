@@ -95,13 +95,33 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*g
 
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
     viewer = createVisualizer( point_cloud_ptr );
-  
     while ( !viewer->wasStopped())
     {
         viewer->spinOnce(100);
         boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
     return segments;
+}
+
+void videWork(char *left_name, char* right_name, cv::Mat(*getDM)(const cv::Mat& left, const cv::Mat& right))
+{
+    cv::VideoCapture Lcap(left_name);
+    cv::VideoCapture Rcap(right_name);
+    if (!Lcap.isOpened() || !Rcap.isOpened())
+    {
+        std::cout  << "Could not open reference " << left_name << std::endl;
+        std::cout  << "Could not open reference " << right_name << std::endl;
+        return ;
+    }
+    cv::Mat frame1;
+    cv::Mat frame2;
+    while(1)
+    {
+        Lcap >> frame1;
+        Rcap >> frame2;
+        if (frame1.empty()) break;
+        frameWork(frame1, frame2, getDM);
+    }
 }
 
 void printHelp(char** argv)
@@ -141,8 +161,17 @@ int main( int argc, char** argv )
         printHelp(argv);
         return 1;
     }
-    cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
-    cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
-    frameWork(img_rgb, right_img, getDM);
+    if(!isVideo)
+    {
+        std::cout<<"Working with photo\n";
+        cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
+        cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
+        frameWork(img_rgb, right_img, getDM);
+    }
+    else
+    {
+        std::cout<<"Working with video\n";
+        videWork(left_name, right_name, getDM);
+    }
     return 0;
 }
