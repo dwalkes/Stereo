@@ -38,7 +38,6 @@ pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (30);
     reg.setInputCloud (cloud);
-    //reg.setIndices (indices);
     reg.setInputNormals (normals);
     reg.setSmoothnessThreshold (12.0 / 180.0 * M_PI);
     reg.setCurvatureThreshold (1.0);
@@ -63,6 +62,34 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
     for(int i = 0; i < clusters.size(); i++)
     {
         res.push_back(Segment(cloud, clusters[i]));
+    }
+    return res;
+}
+
+std::vector<Segment> detectSegments(std::vector<Segment>& segments)
+{
+    std::vector<Segment> res;
+    for(auto s : segments) if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.7) res.push_back(s);
+    return res;
+}
+
+std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>& newS)
+{
+    std::vector<Segment> res;
+    for(auto ns : newS)
+    {
+        for(auto os : oldS)
+        {
+            if( 
+                abs(ns.center.x/os.center.x) < 1.2 && abs(os.center.x/ns.center.x) < 1.2 && 
+                abs(ns.center.y/os.center.y) < 1.2 && abs(os.center.y/ns.center.y) < 1.2 &&
+                ns.width/os.width < 1.5 && os.width/ns.width < 1.5 && os.height/ns.height < 1.5 && ns.height/os.height < 1.5
+            )
+            {
+                res.push_back(ns);
+                break;
+            }
+        }
     }
     return res;
 }
@@ -115,14 +142,23 @@ void videWork(char *left_name, char* right_name, cv::Mat(*getDM)(const cv::Mat& 
         std::cout  << "Could not open reference " << right_name << std::endl;
         return ;
     }
-    cv::Mat frame1;
-    cv::Mat frame2;
+    cv::Mat frame1, frame2;
+    std::vector<Segment> oldS;
     while(1)
     {
         Lcap >> frame1;
         Rcap >> frame2;
         if (frame1.empty()) break;
-        frameWork(frame1, frame2, getDM);
+        auto segments = frameWork(frame1, frame2, getDM);
+        if(oldS.size() == 0)
+            oldS = detectSegments(segments);
+        else
+            oldS = findPairs(oldS, segments);
+        std::cout<<"s "<<oldS.size()<<std::endl;
+        for(auto s:oldS)
+        {
+            std::cout<<">>>>"<<s.center<<std::endl;
+        }
     }
 }
 

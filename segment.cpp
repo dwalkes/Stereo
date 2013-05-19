@@ -18,5 +18,7 @@ Segment::Segment(pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr, pcl::Po
     }
     this->width = this->bottom.x - this->top.x;
     this->height = this->bottom.y - this->top.y;
+    this->center.x = this->top.x + this->width/2;
+    this->center.y = this->top.y + this->height/2;
 }
 

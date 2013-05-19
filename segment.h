@@ -10,7 +10,7 @@ public:
     int width, height;
     Segment(pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr, pcl::PointIndices indices);
     pcl::PointIndices indices;
-    pcl::PointXY top, bottom;    
+    pcl::PointXY top, bottom, center;    
 };
 
 #endif
