@@ -75,10 +75,14 @@ std::vector<Segment> detectSegments(std::vector<Segment>& segments)
 
 double similarity(Segment& os, Segment& ns)
 {
-    return (abs(ns.top.x-os.top.x)  + abs(ns.top.y-os.top.y) +
-    abs(ns.bottom.x-os.bottom.x)  + abs(ns.bottom.y-os.bottom.y) +
-    1.0*(abs(ns.width-os.width) +abs(ns.height-os.height) 
-    + abs(ns.indices.indices.size()-os.indices.indices.size())));
+    if(abs(os.center.x - ns.center.x) > os.width/2 || abs(os.center.y - ns.center.y) > os.height/2 ) return 10000.0;
+    return (
+    abs(ns.top.x-os.top.x)  + abs(ns.top.y-os.top.y) 
+    //+abs(ns.bottom.x-os.bottom.x)  + abs(ns.bottom.y-os.bottom.y) +
+    //abs(ns.widt-os.width) +abs(ns.height-os.height) 
+    //+ abs(ns.indices.indices.size()-os.indices.indices.size())
+    //+ abs(ns.mean-os.mean)
+    );
 }
 
 std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>& newS)
@@ -88,14 +92,14 @@ std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>&
     {
         Segment *best_seg = NULL;
         double best_err = 10000;
-        for(auto ns : newS)
+        for(int i = 0; i < newS.size(); i++)
         {
-            double err = similarity(os, ns);
-            std::cout<<"err "<<err<<std::endl;
+            double err = similarity(os, newS[i]);
             if((err < 200) && (err < best_err))
             {
                 best_err = err;
-                best_seg = &ns;
+                best_seg = &newS[i];
+                std::cout<<newS[i].top<<" "<<os.top<<" err "<<err<<std::endl;
             }
         }
         if(best_seg != NULL)
@@ -164,13 +168,12 @@ void videWork(char *left_name, char* right_name, cv::Mat(*getDM)(const cv::Mat& 
             oldS = detectSegments(segments);
         else
             oldS = findPairs(oldS, segments);
-        std::cout<<"s "<<oldS.size()<<std::endl;
         auto to_show = drawBoxes(frame1, oldS, cv::Scalar(0, 255, 0));
         cv::imshow("olds", to_show);
         cv::waitKey(10);
         for(auto s:oldS)
         {
-            std::cout<<">>>>"<<s.center<<s.width<<" "<<s.height<<std::endl;
+            std::cout<<">>>>"<<s.top<<s.width<<" "<<s.height<<std::endl;
         }
     }
 }

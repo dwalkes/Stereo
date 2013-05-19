@@ -42,7 +42,7 @@ cv::Mat drawBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments, cv::Sc
         //    cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(0, 255, 0));
         //else
         cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), color);
-        //std::cout<<s.top<<" "<<s.height<<" "<<s.width<<std::endl;
+        std::cout<<s.top<<" "<<s.width<<" "<<s.height<<std::endl;
     }
     return res;
 }
