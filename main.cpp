@@ -69,27 +69,37 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
 std::vector<Segment> detectSegments(std::vector<Segment>& segments)
 {
     std::vector<Segment> res;
-    for(auto s : segments) if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.7) res.push_back(s);
+    for(auto s : segments) if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.6) res.push_back(s);
     return res;
+}
+
+double similarity(Segment& os, Segment& ns)
+{
+    return (abs(ns.top.x-os.top.x)  + abs(ns.top.y-os.top.y) +
+    abs(ns.bottom.x-os.bottom.x)  + abs(ns.bottom.y-os.bottom.y) +
+    1.0*(abs(ns.width-os.width) +abs(ns.height-os.height) 
+    + abs(ns.indices.indices.size()-os.indices.indices.size())));
 }
 
 std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>& newS)
 {
     std::vector<Segment> res;
-    for(auto ns : newS)
+    for(auto os : oldS)
     {
-        for(auto os : oldS)
+        Segment *best_seg = NULL;
+        double best_err = 10000;
+        for(auto ns : newS)
         {
-            if( 
-                abs(ns.center.x/os.center.x) < 1.2 && abs(os.center.x/ns.center.x) < 1.2 && 
-                abs(ns.center.y/os.center.y) < 1.2 && abs(os.center.y/ns.center.y) < 1.2 &&
-                ns.width/os.width < 1.5 && os.width/ns.width < 1.5 && os.height/ns.height < 1.5 && ns.height/os.height < 1.5
-            )
+            double err = similarity(os, ns);
+            std::cout<<"err "<<err<<std::endl;
+            if((err < 200) && (err < best_err))
             {
-                res.push_back(ns);
-                break;
+                best_err = err;
+                best_seg = &ns;
             }
         }
+        if(best_seg != NULL)
+            res.push_back(*best_seg);
     }
     return res;
 }
@@ -111,7 +121,7 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*g
     auto clusters = getClusters(reg);
     std::cout<<"Computing segments\n";
     auto segments = getFilteredSegments(point_cloud_ptr, clusters);
-    auto to_show = drawBoxes(img_rgb, segments);
+    auto to_show = drawBoxes(img_rgb, segments, cv::Scalar(255, 0, 0));
     cv::imshow("boxes", to_show);
     cv::waitKey(10);
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
@@ -155,9 +165,12 @@ void videWork(char *left_name, char* right_name, cv::Mat(*getDM)(const cv::Mat& 
         else
             oldS = findPairs(oldS, segments);
         std::cout<<"s "<<oldS.size()<<std::endl;
+        auto to_show = drawBoxes(frame1, oldS, cv::Scalar(0, 255, 0));
+        cv::imshow("olds", to_show);
+        cv::waitKey(10);
         for(auto s:oldS)
         {
-            std::cout<<">>>>"<<s.center<<std::endl;
+            std::cout<<">>>>"<<s.center<<s.width<<" "<<s.height<<std::endl;
         }
     }
 }
