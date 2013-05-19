@@ -67,11 +67,12 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
     return res;
 }
 
-std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img)
+std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*getDepthMap)(const cv::Mat& left, const cv::Mat& right))
 {
     //cv::Mat img_disparity = dm::getDepthMapVar(dm::toGray(img_rgb), dm::toGray(right_img)); 
     //cv::Mat img_disparity = dm::normalize(dm::getDepthMapBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
-    cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
+    //cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
+    cv::Mat img_disparity = dm::normalize(getDepthMap(dm::toGray(img_rgb), dm::toGray(right_img))); 
 
     cv::imshow("rbg-image", img_rgb);
     cv::imshow("disparity-image", img_disparity);
@@ -99,31 +100,45 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img)
     {
         viewer->spinOnce(100);
         boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-        /*viewer->removeAllPointClouds();
-        viewer->removeAllShapes();
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr tmp_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-        for(int i = 0; i < clusters[counter].indices.size(); i++)
-        {
-            tmp_cloud->push_back(point_cloud_ptr->at(clusters[counter].indices[i]));
-        }
-        pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(tmp_cloud);
-        viewer->addPointCloud<pcl::PointXYZRGB> (tmp_cloud, rgb, "reconstruction");
-        counter++;
-        if(counter >= clusters.size()) counter = 0;*/
     }
     return segments;
 }
 
+void printHelp(char** argv)
+{
+    std::cerr << "Usage: " << argv[0] << " [-v] [-m var|bm|sgbm] -l <left image> -r <right image> " << std::endl;
+    std::cerr << "\t-m mode" << std::endl;
+    std::cerr << "\t-v vdeo" << std::endl;
+}
+
 int main( int argc, char** argv )
 {
+    char* left_name;
+    char* right_name;
+    bool isVideo = false;
+    cv::Mat  (*getDM)(const cv::Mat& left, const cv::Mat& right) = &dm::getDepthMapSGBM;
     if (argc < 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <left image> <right image> " << std::endl;
+        printHelp(argv);
         return 1;
     }
 
-    cv::Mat img_rgb = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-    cv::Mat right_img = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
-    frameWork(img_rgb, right_img);
+    for(int i = 0; i < argc; i++)
+    {
+        if(strcmp(argv[i], "-l") == 0) left_name = argv[++i];
+        if(strcmp(argv[i], "-r") == 0) right_name = argv[++i];
+        if(strcmp(argv[i], "-v") == 0) isVideo = true;
+        if(strcmp(argv[i], "-m") == 0)
+        {
+            i++;
+            if(strcmp(argv[i], "bm") == 0) getDM = dm::getDepthMapBM;
+            if(strcmp(argv[i], "sgbm") == 0) getDM = dm::getDepthMapSGBM;
+            if(strcmp(argv[i], "var") == 0) getDM = dm::getDepthMapVar;
+        }
+    }
+
+    cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
+    cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
+    frameWork(img_rgb, right_img, getDM);
     return 0;
 }
