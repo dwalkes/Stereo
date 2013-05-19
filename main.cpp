@@ -20,6 +20,7 @@
 #include "depthmap.h"
 #include "reprojection.h"
 #include "segment.h"
+#include "vizualization.h"
 
 pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
@@ -56,12 +57,17 @@ std::vector <pcl::PointIndices> getClusters(pcl::RegionGrowing<pcl::PointXYZRGB,
     return clusters;
 }
 
-std::vector<Segment> getFilteredSegments(std::vector<pcl::PointIndices>& clusters)
+std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<pcl::PointIndices>& clusters)
 {
     std::vector<Segment> res;
+    for(int i = 0; i < clusters.size(); i++)
+    {
+        res.push_back(Segment(cloud, clusters[i]));
+    }
     return res;
 }
 
+/*
 //This function creates a PCL visualizer, sets the point cloud to view and returns a pointer
 boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
 {
@@ -93,7 +99,7 @@ void showClustersSeparetly(const cv::Mat& img_rgb, const pcl::PointCloud<pcl::Po
     }
 
 }
-
+*/
 int main( int argc, char** argv )
 {
     //Check arguments
@@ -128,6 +134,7 @@ int main( int argc, char** argv )
     auto reg = getColored(point_cloud_ptr);
     auto clusters = getClusters(reg);
     end = clock();
+    getFilteredSegments(point_cloud_ptr, clusters);
 
     std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;

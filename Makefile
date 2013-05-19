@@ -138,6 +138,19 @@ Segment/fast:
 .PHONY : Segment/fast
 
 #=============================================================================
+# Target rules for targets named Vizualization
+
+# Build rule for target.
+Vizualization: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Vizualization
+.PHONY : Vizualization
+
+# fast build rule for target.
+Vizualization/fast:
+	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/build
+.PHONY : Vizualization/fast
+
+#=============================================================================
 # Target rules for targets named brute
 
 # Build rule for target.
@@ -394,6 +407,30 @@ stereoVartune.cpp.s:
 	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/stereoVartune.cpp.s
 .PHONY : stereoVartune.cpp.s
 
+vizualization.o: vizualization.cpp.o
+.PHONY : vizualization.o
+
+# target to build an object file
+vizualization.cpp.o:
+	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/vizualization.cpp.o
+.PHONY : vizualization.cpp.o
+
+vizualization.i: vizualization.cpp.i
+.PHONY : vizualization.i
+
+# target to preprocess a source file
+vizualization.cpp.i:
+	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/vizualization.cpp.i
+.PHONY : vizualization.cpp.i
+
+vizualization.s: vizualization.cpp.s
+.PHONY : vizualization.s
+
+# target to generate assembly for a file
+vizualization.cpp.s:
+	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/vizualization.cpp.s
+.PHONY : vizualization.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -403,6 +440,7 @@ help:
 	@echo "... DM"
 	@echo "... Reprojection"
 	@echo "... Segment"
+	@echo "... Vizualization"
 	@echo "... brute"
 	@echo "... edit_cache"
 	@echo "... main"
@@ -434,6 +472,9 @@ help:
 	@echo "... stereoVartune.o"
 	@echo "... stereoVartune.i"
 	@echo "... stereoVartune.s"
+	@echo "... vizualization.o"
+	@echo "... vizualization.i"
+	@echo "... vizualization.s"
 .PHONY : help
 
 
