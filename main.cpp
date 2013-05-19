@@ -113,8 +113,8 @@ void printHelp(char** argv)
 
 int main( int argc, char** argv )
 {
-    char* left_name;
-    char* right_name;
+    char* left_name = "";
+    char* right_name = "";
     bool isVideo = false;
     cv::Mat  (*getDM)(const cv::Mat& left, const cv::Mat& right) = &dm::getDepthMapSGBM;
     if (argc < 3)
@@ -136,7 +136,11 @@ int main( int argc, char** argv )
             if(strcmp(argv[i], "var") == 0) getDM = dm::getDepthMapVar;
         }
     }
-
+    if(strlen(left_name) == 0 || strlen(right_name) == 0)
+    {
+        printHelp(argv);
+        return 1;
+    }
     cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
     cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
     frameWork(img_rgb, right_img, getDM);
