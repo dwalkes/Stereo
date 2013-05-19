@@ -32,15 +32,18 @@ void showClustersSeparetly(const cv::Mat& img_rgb, const pcl::PointCloud<pcl::Po
 
 }
 
-void showBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments)
+cv::Mat drawBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments)
 {
     cv::Mat res;
     img_rgb.copyTo(res);
     for(auto s : segments)
     {
-        cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(255, 0, 0));
+        if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.7)
+            cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(0, 255, 0));
+        else
+            cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(255, 0, 0));
+        std::cout<<s.top<<" "<<s.height<<" "<<s.width<<std::endl;
     }
-    cv::imshow("", res);
-    cv::waitKey();
+    return res;
 }
 

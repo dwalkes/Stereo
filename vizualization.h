@@ -14,6 +14,6 @@
 
 boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud);
 void showClustersSeparetly(const cv::Mat& img_rgb, const pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr, std::vector<pcl::PointIndices> &clusters);
-void showBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments);
+cv::Mat drawBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments);
 
 #endif

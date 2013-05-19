@@ -67,11 +67,8 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
     return res;
 }
 
-std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*getDepthMap)(const cv::Mat& left, const cv::Mat& right))
+std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*getDepthMap)(const cv::Mat& left, const cv::Mat& right), bool showCloud=false)
 {
-    //cv::Mat img_disparity = dm::getDepthMapVar(dm::toGray(img_rgb), dm::toGray(right_img)); 
-    //cv::Mat img_disparity = dm::normalize(dm::getDepthMapBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
-    //cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
     cv::Mat img_disparity = dm::normalize(getDepthMap(dm::toGray(img_rgb), dm::toGray(right_img))); 
 
     cv::imshow("rbg-image", img_rgb);
@@ -87,18 +84,23 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*g
     auto clusters = getClusters(reg);
     std::cout<<"Computing segments\n";
     auto segments = getFilteredSegments(point_cloud_ptr, clusters);
-    showBoxes(img_rgb, segments);
+    auto to_show = drawBoxes(img_rgb, segments);
+    cv::imshow("boxes", to_show);
+    cv::waitKey(10);
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
     //showClustersSeparetly(img_rgb, point_cloud_ptr, clusters);
 
     point_cloud_ptr = reg.getColoredCloud();
 
-    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-    viewer = createVisualizer( point_cloud_ptr );
-    while ( !viewer->wasStopped())
+    if(showCloud)
     {
-        viewer->spinOnce(100);
-        boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+        boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+        viewer = createVisualizer( point_cloud_ptr );
+        while ( !viewer->wasStopped())
+        {
+            viewer->spinOnce(100);
+            boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+        }
     }
     return segments;
 }
@@ -166,7 +168,7 @@ int main( int argc, char** argv )
         std::cout<<"Working with photo\n";
         cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
         cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
-        frameWork(img_rgb, right_img, getDM);
+        frameWork(img_rgb, right_img, getDM, true);
     }
     else
     {
