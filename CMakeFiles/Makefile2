@@ -232,9 +232,9 @@ clean: CMakeFiles/brute.dir/clean
 
 # All Build rule for target.
 CMakeFiles/main.dir/all: CMakeFiles/DM.dir/all
-CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
-CMakeFiles/main.dir/all: CMakeFiles/Segment.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/Vizualization.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/Segment.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  6
