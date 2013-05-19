@@ -32,3 +32,15 @@ void showClustersSeparetly(const cv::Mat& img_rgb, const pcl::PointCloud<pcl::Po
 
 }
 
+void showBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments)
+{
+    cv::Mat res;
+    img_rgb.copyTo(res);
+    for(auto s : segments)
+    {
+        cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(255, 0, 0));
+    }
+    cv::imshow("", res);
+    cv::waitKey();
+}
+
