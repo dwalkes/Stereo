@@ -67,26 +67,14 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
     return res;
 }
 
-int main( int argc, char** argv )
+std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img)
 {
-    //Check arguments
-    if (argc != 3)
-    {
-        std::cerr << "Usage: " << argv[0] << " <left image> <right image> " << std::endl;
-        return 1;
-    }
-
-    cv::Mat img_rgb = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-    cv::Mat right_img = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
     //cv::Mat img_disparity = dm::getDepthMapVar(dm::toGray(img_rgb), dm::toGray(right_img)); 
     //cv::Mat img_disparity = dm::normalize(dm::getDepthMapBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
     cv::Mat img_disparity = dm::normalize(dm::getDepthMapSGBM(dm::toGray(img_rgb), dm::toGray(right_img))); 
 
-    cv::namedWindow("rgb-image");
-    cv::namedWindow("disparity-image");
     cv::imshow("rbg-image", img_rgb);
     cv::imshow("disparity-image", img_disparity);
-    std::cout << "Press a key to continue..." << std::endl;
     cv::waitKey(1);
     std::cout << "Creating Point Cloud..." <<std::endl;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -94,17 +82,12 @@ int main( int argc, char** argv )
     //complex_reproject_cloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
     straight_reproject_cloud(img_rgb, img_disparity, point_cloud_ptr); 
 
-    clock_t begin, end;
-    double time_spent;
-    begin = clock();
     auto reg = getColored(point_cloud_ptr);
     auto clusters = getClusters(reg);
-    end = clock();
+    std::cout<<"Computing segments\n";
     auto segments = getFilteredSegments(point_cloud_ptr, clusters);
-    //showBoxes(img_rgb, segments);
-    std::cout <<"(clustering) time elapsed"<< (double)(end - begin) / CLOCKS_PER_SEC <<std::endl;
+    showBoxes(img_rgb, segments);
     std::cout << "Number of clusters is equal to " << clusters.size () << std::endl;
-    int counter = 0;
     //showClustersSeparetly(img_rgb, point_cloud_ptr, clusters);
 
     point_cloud_ptr = reg.getColoredCloud();
@@ -128,6 +111,19 @@ int main( int argc, char** argv )
         counter++;
         if(counter >= clusters.size()) counter = 0;*/
     }
+    return segments;
+}
 
+int main( int argc, char** argv )
+{
+    if (argc < 3)
+    {
+        std::cerr << "Usage: " << argv[0] << " <left image> <right image> " << std::endl;
+        return 1;
+    }
+
+    cv::Mat img_rgb = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    cv::Mat right_img = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
+    frameWork(img_rgb, right_img);
     return 0;
 }

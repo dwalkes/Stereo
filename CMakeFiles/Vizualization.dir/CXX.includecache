@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+/home/kirill/coding/MyPy/Stereo/segment.h
+pcl/common/common_headers.h
+-
+pcl/point_types.h
+-
+
 /home/kirill/coding/MyPy/Stereo/vizualization.cpp
 vizualization.h
 /home/kirill/coding/MyPy/Stereo/vizualization.h
@@ -27,6 +33,8 @@ pcl/point_types.h
 -
 pcl/visualization/cloud_viewer.h
 -
+segment.h
+/home/kirill/coding/MyPy/Stereo/segment.h
 
 /opt/opencv244/include/opencv/cv.h
 opencv2/core/core_c.h

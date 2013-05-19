@@ -16,5 +16,7 @@ Segment::Segment(pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr, pcl::Po
         this->bottom.x = std::max(point_cloud_ptr->at(i).x, this->bottom.x);
         this->bottom.y = std::max(point_cloud_ptr->at(i).y, this->bottom.y);
     }
+    this->width = this->bottom.x - this->top.x;
+    this->height = this->bottom.y - this->top.y;
 }
 
