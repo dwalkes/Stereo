@@ -1,4 +1,5 @@
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/DM.dir
+/home/kirill/coding/MyPy/Stereo/CMakeFiles/RectDM.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/Reprojection.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/Segment.dir
 /home/kirill/coding/MyPy/Stereo/CMakeFiles/Vizualization.dir

@@ -88,13 +88,48 @@ clean: CMakeFiles/DM.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/RectDM.dir
+
+# All Build rule for target.
+CMakeFiles/RectDM.dir/all: CMakeFiles/DM.dir/all
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/depend
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  2
+	@echo "Built target RectDM"
+.PHONY : CMakeFiles/RectDM.dir/all
+
+# Include target in all.
+all: CMakeFiles/RectDM.dir/all
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/RectDM.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirill/coding/MyPy/Stereo/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/RectDM.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirill/coding/MyPy/Stereo/CMakeFiles 0
+.PHONY : CMakeFiles/RectDM.dir/rule
+
+# Convenience name for target.
+RectDM: CMakeFiles/RectDM.dir/rule
+.PHONY : RectDM
+
+# clean rule for target.
+CMakeFiles/RectDM.dir/clean:
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/clean
+.PHONY : CMakeFiles/RectDM.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/RectDM.dir/clean
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/Reprojection.dir
 
 # All Build rule for target.
 CMakeFiles/Reprojection.dir/all:
 	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/depend
 	$(MAKE) -f CMakeFiles/Reprojection.dir/build.make CMakeFiles/Reprojection.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  2
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  3
 	@echo "Built target Reprojection"
 .PHONY : CMakeFiles/Reprojection.dir/all
 
@@ -129,7 +164,7 @@ clean: CMakeFiles/Reprojection.dir/clean
 CMakeFiles/Segment.dir/all:
 	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/depend
 	$(MAKE) -f CMakeFiles/Segment.dir/build.make CMakeFiles/Segment.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  3
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  4
 	@echo "Built target Segment"
 .PHONY : CMakeFiles/Segment.dir/all
 
@@ -164,7 +199,7 @@ clean: CMakeFiles/Segment.dir/clean
 CMakeFiles/Vizualization.dir/all:
 	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/depend
 	$(MAKE) -f CMakeFiles/Vizualization.dir/build.make CMakeFiles/Vizualization.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  4
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  5
 	@echo "Built target Vizualization"
 .PHONY : CMakeFiles/Vizualization.dir/all
 
@@ -199,7 +234,7 @@ clean: CMakeFiles/Vizualization.dir/clean
 CMakeFiles/brute.dir/all:
 	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/depend
 	$(MAKE) -f CMakeFiles/brute.dir/build.make CMakeFiles/brute.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  5
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  6
 	@echo "Built target brute"
 .PHONY : CMakeFiles/brute.dir/all
 
@@ -231,13 +266,13 @@ clean: CMakeFiles/brute.dir/clean
 # Target rules for target CMakeFiles/main.dir
 
 # All Build rule for target.
-CMakeFiles/main.dir/all: CMakeFiles/DM.dir/all
-CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/Vizualization.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/Segment.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/DM.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/Reprojection.dir/all
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  6
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  7
 	@echo "Built target main"
 .PHONY : CMakeFiles/main.dir/all
 
@@ -272,7 +307,7 @@ clean: CMakeFiles/main.dir/clean
 CMakeFiles/stereoBMtune.dir/all:
 	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/depend
 	$(MAKE) -f CMakeFiles/stereoBMtune.dir/build.make CMakeFiles/stereoBMtune.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  7
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  8
 	@echo "Built target stereoBMtune"
 .PHONY : CMakeFiles/stereoBMtune.dir/all
 
@@ -307,7 +342,7 @@ clean: CMakeFiles/stereoBMtune.dir/clean
 CMakeFiles/stereoSGBMtune.dir/all:
 	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/depend
 	$(MAKE) -f CMakeFiles/stereoSGBMtune.dir/build.make CMakeFiles/stereoSGBMtune.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  8
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  9
 	@echo "Built target stereoSGBMtune"
 .PHONY : CMakeFiles/stereoSGBMtune.dir/all
 
@@ -342,7 +377,7 @@ clean: CMakeFiles/stereoSGBMtune.dir/clean
 CMakeFiles/stereoVartune.dir/all:
 	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/depend
 	$(MAKE) -f CMakeFiles/stereoVartune.dir/build.make CMakeFiles/stereoVartune.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  9
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kirill/coding/MyPy/Stereo/CMakeFiles  10
 	@echo "Built target stereoVartune"
 .PHONY : CMakeFiles/stereoVartune.dir/all
 

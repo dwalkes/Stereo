@@ -112,6 +112,19 @@ DM/fast:
 .PHONY : DM/fast
 
 #=============================================================================
+# Target rules for targets named RectDM
+
+# Build rule for target.
+RectDM: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 RectDM
+.PHONY : RectDM
+
+# fast build rule for target.
+RectDM/fast:
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/build
+.PHONY : RectDM/fast
+
+#=============================================================================
 # Target rules for targets named Reprojection
 
 # Build rule for target.
@@ -287,6 +300,30 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+rectDM.o: rectDM.cpp.o
+.PHONY : rectDM.o
+
+# target to build an object file
+rectDM.cpp.o:
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/rectDM.cpp.o
+.PHONY : rectDM.cpp.o
+
+rectDM.i: rectDM.cpp.i
+.PHONY : rectDM.i
+
+# target to preprocess a source file
+rectDM.cpp.i:
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/rectDM.cpp.i
+.PHONY : rectDM.cpp.i
+
+rectDM.s: rectDM.cpp.s
+.PHONY : rectDM.s
+
+# target to generate assembly for a file
+rectDM.cpp.s:
+	$(MAKE) -f CMakeFiles/RectDM.dir/build.make CMakeFiles/RectDM.dir/rectDM.cpp.s
+.PHONY : rectDM.cpp.s
+
 reprojection.o: reprojection.cpp.o
 .PHONY : reprojection.o
 
@@ -438,6 +475,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... DM"
+	@echo "... RectDM"
 	@echo "... Reprojection"
 	@echo "... Segment"
 	@echo "... Vizualization"
@@ -457,6 +495,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... rectDM.o"
+	@echo "... rectDM.i"
+	@echo "... rectDM.s"
 	@echo "... reprojection.o"
 	@echo "... reprojection.i"
 	@echo "... reprojection.s"

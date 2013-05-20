@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "depthmap.h"
+
 cv::Mat** loadRMap(const char* intrinsics, const char* extrinsics, cv::Size imageSize)
 {
     cv::FileStorage fsi(intrinsics, cv::FileStorage::READ);
@@ -37,24 +39,27 @@ cv::Mat** loadRMap(const char* intrinsics, const char* extrinsics, cv::Size imag
     return rmap;
 }
 
+cv::Mat rectify(cv::Mat& source, cv::Mat** rmap, char index)
+{
+    cv::Mat rimg;
+    cv::remap(source, rimg, rmap[index][0], rmap[index][1], CV_INTER_LINEAR);
+    return rimg;
+}
+
 int main(int argc, char** argv)
 {
     cv::Size imageSize(640, 480);
-    //cv::Mat rmap[2][2];
-    //cv::Mat** rmap = loadRMap("intrinsics.yml", "extrinsics.yml", imageSize);
     cv::Mat** rmap = loadRMap(argv[1], argv[2], imageSize);
     
-    cv::Mat img = cv::imread("chess_photo/left0.jpg", 0), rimg, cimg;
-    cv::remap(img, rimg, rmap[0][0], rmap[0][1], CV_INTER_LINEAR);
-    cv::cvtColor(rimg, cimg, CV_GRAY2BGR);
+    cv::Mat img = cv::imread(argv[3], 0), rimg, cimg;
+    cimg = rectify(img, rmap, 0);
     cv::imshow("l", cimg);
-    cv::imwrite("l.jpg", cimg);
     
-    img = cv::imread("chess_photo/right0.jpg", 0);
-    cv::remap(img, rimg, rmap[1][0], rmap[1][1], CV_INTER_LINEAR);
-    cv::cvtColor(rimg, cimg, CV_GRAY2BGR);
-    cv::imshow("r", cimg);
-    cv::imwrite("r.jpg", cimg);
+    img = cv::imread(argv[4], 0);
+    cv::Mat cimg2 = rectify(img, rmap, 1);
+    cv::imshow("r", cimg2);
+    cv::Mat dmap = dm::normalize(dm::getDepthMapBM(cimg, cimg2));
+    cv::imshow("d", dmap);
     cv::waitKey();
 
     return 0;

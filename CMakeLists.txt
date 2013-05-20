@@ -32,6 +32,9 @@ target_link_libraries( stereoSGBMtune ${OpenCV_LIBS})
 add_library(DM depthmap.cpp)
 target_link_libraries( DM ${OpenCV_LIBS})
 
+add_executable(RectDM rectDM.cpp)
+target_link_libraries( RectDM DM ${OpenCV_LIBS})
+
 add_library(Reprojection reprojection.cpp)
 target_link_libraries( Reprojection ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
