@@ -12,6 +12,8 @@ namespace dm
     cv::Mat getDepthMapVar(cv::Mat const &left, cv::Mat const &right);
     cv::Mat getDepthMapBM(cv::Mat const &left, cv::Mat const &right);
     cv::Mat toGray(const cv::Mat& rgb_image);
+    cv::Mat** loadRMap(const char* intrinsics, const char* extrinsics, cv::Size imageSize);
+    cv::Mat rectify(cv::Mat& source, cv::Mat** rmap, char index);
 }
 
 #endif

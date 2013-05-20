@@ -13,7 +13,7 @@
 
 #include "depthmap.h"
 
-cv::Mat** loadRMap(const char* intrinsics, const char* extrinsics, cv::Size imageSize)
+/*cv::Mat** loadRMap(const char* intrinsics, const char* extrinsics, cv::Size imageSize)
 {
     cv::FileStorage fsi(intrinsics, cv::FileStorage::READ);
     cv::Mat cameraMatrix[2], distCoeffs[2];
@@ -45,18 +45,18 @@ cv::Mat rectify(cv::Mat& source, cv::Mat** rmap, char index)
     cv::remap(source, rimg, rmap[index][0], rmap[index][1], CV_INTER_LINEAR);
     return rimg;
 }
-
+*/
 int main(int argc, char** argv)
 {
     cv::Size imageSize(640, 480);
-    cv::Mat** rmap = loadRMap(argv[1], argv[2], imageSize);
+    cv::Mat** rmap = dm::loadRMap(argv[1], argv[2], imageSize);
     
     cv::Mat img = cv::imread(argv[3], 0), rimg, cimg;
-    cimg = rectify(img, rmap, 0);
+    cimg = dm::rectify(img, rmap, 0);
     cv::imshow("l", cimg);
     
     img = cv::imread(argv[4], 0);
-    cv::Mat cimg2 = rectify(img, rmap, 1);
+    cv::Mat cimg2 = dm::rectify(img, rmap, 1);
     cv::imshow("r", cimg2);
     cv::Mat dmap = dm::normalize(dm::getDepthMapBM(cimg, cimg2));
     cv::imshow("d", dmap);
