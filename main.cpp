@@ -22,7 +22,7 @@
 #include "segment.h"
 #include "vizualization.h"
 
-pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getColored(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
+pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> getRegionGrowing(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud)
 {
     pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
     pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
@@ -70,18 +70,19 @@ std::vector<Segment> detectSegments(std::vector<Segment>& segments)
 {
     std::vector<Segment> res;
     for(auto s : segments) if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.6) res.push_back(s);
+    std::cout<<"Find "<< res.size()<<std::endl;
     return res;
 }
 
 double similarity(Segment& os, Segment& ns)
 {
-    if(abs(os.center.x - ns.center.x) > os.width/2 || abs(os.center.y - ns.center.y) > os.height/2 ) return 10000.0;
+    //if(abs(os.center.x - ns.center.x) > os.width/2 || abs(os.center.y - ns.center.y) > os.height/2 ) return 10000.0;
     return (
-    abs(ns.top.x-os.top.x)  + abs(ns.top.y-os.top.y) 
-    //+abs(ns.bottom.x-os.bottom.x)  + abs(ns.bottom.y-os.bottom.y) +
-    //abs(ns.widt-os.width) +abs(ns.height-os.height) 
-    //+ abs(ns.indices.indices.size()-os.indices.indices.size())
-    //+ abs(ns.mean-os.mean)
+        abs(ns.top.x-os.top.x)  + abs(ns.top.y-os.top.y) 
+        +abs(ns.bottom.x-os.bottom.x)  + abs(ns.bottom.y-os.bottom.y) 
+        +abs(ns.width-os.width) +abs(ns.height-os.height) 
+        //+ abs(ns.indices.indices.size()-os.indices.indices.size())
+        //+ abs(ns.mean-os.mean)
     );
 }
 
@@ -99,7 +100,6 @@ std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>&
             {
                 best_err = err;
                 best_seg = &newS[i];
-                std::cout<<newS[i].top<<" "<<os.top<<" err "<<err<<std::endl;
             }
         }
         if(best_seg != NULL)
@@ -121,7 +121,7 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*g
     //complex_reproject_cloud(Q, img_rgb, img_disparity, point_cloud_ptr); 
     straight_reproject_cloud(img_rgb, img_disparity, point_cloud_ptr); 
 
-    auto reg = getColored(point_cloud_ptr);
+    auto reg = getRegionGrowing(point_cloud_ptr);
     auto clusters = getClusters(reg);
     std::cout<<"Computing segments\n";
     auto segments = getFilteredSegments(point_cloud_ptr, clusters);
