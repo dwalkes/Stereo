@@ -435,7 +435,7 @@ int main(int argc, char** argv)
     cv::imshow("l", cimg);
     cv::imwrite("l.jpg", cimg);
     img = cv::imread("right0.jpg", 0);
-    cv::remap(img, rimg, rmap[0][0], rmap[0][1], CV_INTER_LINEAR);
+    cv::remap(img, rimg, rmap[1][0], rmap[1][1], CV_INTER_LINEAR);
     cv::cvtColor(rimg, cimg, CV_GRAY2BGR);
     cv::imshow("r", cimg);
     cv::imwrite("r.jpg", cimg);
