@@ -22,6 +22,7 @@ int cn;
 int sgbm_P1;
 int sgbm_P2;
 int sgmb_numberOfDisparities;
+int tmp_sgmb_numberOfDisparities;
 int sgbm_uniquenessRatio = 10;
 int sgbm_speckleWindowSize = 50;
 int sgbm_speckleRange = 36;
@@ -39,6 +40,9 @@ cv::Mat getDepthMapSGBM(cv::Mat const &left, cv::Mat const &right)
     sgbm.P1 = sgbm_P1;//8*cn*sgbm.SADWindowSize*sgbm.SADWindowSize;
     sgbm.P2 = sgbm_P2;//32*cn*sgbm.SADWindowSize*sgbm.SADWindowSize;
     sgbm.minDisparity = sgbm_minDisparity;//0;
+    //if(tmp_sgmb_numberOfDisparities % 16 == 0) sgmb_numberOfDisparities = tmp_sgmb_numberOfDisparities;
+    sgmb_numberOfDisparities = tmp_sgmb_numberOfDisparities - tmp_sgmb_numberOfDisparities%16;
+
     sgbm.numberOfDisparities = sgmb_numberOfDisparities;//((left.cols/8) + 15) & -16;
     sgbm.uniquenessRatio = sgbm_uniquenessRatio;
     sgbm.speckleWindowSize = sgbm_speckleWindowSize;
@@ -62,6 +66,7 @@ int main(int argc, char** argv)
     left = cv::imread(argv[1], 0);
     right = cv::imread(argv[2], 0);
     sgmb_numberOfDisparities = ((left.cols/8) + 15) & -16;
+    tmp_sgmb_numberOfDisparities = sgmb_numberOfDisparities;
     sgbm_P1 = 8*cn*sgbm_SADWindowSize*sgbm_SADWindowSize;
     sgbm_P2 = 32*cn*sgbm_SADWindowSize*sgbm_SADWindowSize;
 
@@ -72,7 +77,7 @@ int main(int argc, char** argv)
     cv::createTrackbar( "P1", "depth map", &sgbm_P1, 300, on_trackbar );
     cv::createTrackbar( "P2", "depth map", &sgbm_P2, 300, on_trackbar );
     cv::createTrackbar( "minDisparity", "depth map", &sgbm_minDisparity, 60, on_trackbar );
-    cv::createTrackbar( "numberOfDisparities", "depth map", &sgmb_numberOfDisparities, 100, on_trackbar );
+    cv::createTrackbar( "numberOfDisparities", "depth map", &tmp_sgmb_numberOfDisparities, 200, on_trackbar );
     cv::createTrackbar( "sgbm_uniquenessRatio", "depth map", &sgbm_uniquenessRatio, 100, on_trackbar );
     cv::createTrackbar( "speckleWindowSize", "depth map", &sgbm_speckleWindowSize, 200, on_trackbar );
     cv::createTrackbar( "speckleRange", "depth map", &sgbm_speckleRange, 200, on_trackbar );
