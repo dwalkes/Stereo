@@ -44,10 +44,15 @@ def draw_match(img1, img2, p1, p2, status = None, H = None):
         status = np.ones(len(p1), np.bool_)
     green = (0, 255, 0)
     red = (0, 0, 255)
-    
     res_error = 0
     count = 0
 
+    #tr_img = cv2.perspectiveTransform(tmp_img, H)
+    tr1_img = cv2.warpPerspective(img1, H, tmp_img.shape)
+    tr2_img = cv2.warpPerspective(img2, H, tmp_img.shape)
+    cv2.imshow('trans1', tr1_img)
+    #cv2.imshow('trans2', tr2_img)
+    print H
     for (x1, y1), (x2, y2), inlier in zip(np.int32(p1), np.int32(p2), status):
         col = [red, green][inlier]
         if inlier:
@@ -103,9 +108,7 @@ if __name__ == '__main__':
 
     template = cv2.imread(fn1)
     frame = cv2.imread(fn2)
-    template = frame [:, 0:frame.shape[0]/2] 
-    frame = frame [:, frame.shape[0]/2:-1]
-    rans = 50.
+    rans = 70.
     r_threshold = 0.9
     while 1:
         #template = None
@@ -124,14 +127,6 @@ if __name__ == '__main__':
         if key == 83: rans += 10
         if key == 84: r_threshold += 0.1
         if key == 82: r_threshold -= 0.1
+        if key == 27: exit()
 
-    '''surf = cv2.SURF(1000)
-    pr1 = params_from_image(img1)
-    pr2 = params_from_image(img2)
-    print 'img1 - %d features, img2 - %d features' % (len(pr1['kp']), len(pr2['kp']))
-    vis_flann, status = template_match(pr1, pr2)
-    print 'flann match:',
-    if status != None:
-        print '%d / %d  inliers/matched' % (np.sum(status), len(status))
-    cv2.imshow('find_obj SURF flann', vis_flann)
-    cv2.waitKey()'''
+
