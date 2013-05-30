@@ -102,5 +102,5 @@ int main(int argc, char** argv)
     cv::createTrackbar( "poly_sigma", "depth map", &var_polySigma, 100, on_trackbar );
     cv::createTrackbar( "fi", "depth map", &var_fi, 100, on_trackbar );
     cv::createTrackbar( "lambda", "depth map", &var_lambda, 100, on_trackbar );
-    cv::waitKey(0);
+    while (1) cv::waitKey(0);
 }

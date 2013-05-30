@@ -76,5 +76,5 @@ int main(int argc, char** argv)
     cv::createTrackbar( "sgbm_uniquenessRatio", "depth map", &sgbm_uniquenessRatio, 100, on_trackbar );
     cv::createTrackbar( "speckleWindowSize", "depth map", &sgbm_speckleWindowSize, 200, on_trackbar );
     cv::createTrackbar( "speckleRange", "depth map", &sgbm_speckleRange, 200, on_trackbar );
-    cv::waitKey(0);
+    while (1) cv::waitKey(0);
 }
