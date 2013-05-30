@@ -48,9 +48,9 @@ def draw_match(img1, img2, p1, p2, status = None, H = None):
     count = 0
 
     #tr_img = cv2.perspectiveTransform(tmp_img, H)
-    tr1_img = cv2.warpPerspective(img1, H, tmp_img.shape)
-    tr2_img = cv2.warpPerspective(img2, H, tmp_img.shape)
+    tr1_img = cv2.warpPerspective(img1, H, (tmp_img.shape[1], tmp_img.shape[0]))
     cv2.imshow('trans1', tr1_img)
+    cv2.imwrite('tmp.jpg', tr1_img)
     #cv2.imshow('trans2', tr2_img)
     print H
     for (x1, y1), (x2, y2), inlier in zip(np.int32(p1), np.int32(p2), status):
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     template = cv2.imread(fn1)
     frame = cv2.imread(fn2)
-    rans = 70.
+    rans = 65.
     r_threshold = 0.9
     while 1:
         #template = None
