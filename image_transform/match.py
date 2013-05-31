@@ -55,7 +55,6 @@ def draw_match(img1, img2, p1, p2, status = None, H = None, index=index):
     tr1_img = cv2.warpPerspective(img1, H, (tmp_img.shape[1], tmp_img.shape[0]))
     cv2.imshow('trans1', tr1_img)
     cv2.imwrite('match_dump/%d.jpg' % index, tr1_img)
-    with open('match_dump/%d.np' % index, 'w') as f: np.save(f, H)
     #cv2.imshow('trans2', tr2_img)
     print H
     for (x1, y1), (x2, y2), inlier in zip(np.int32(p1), np.int32(p2), status):
@@ -94,6 +93,10 @@ def template_match(params_orig, params_template, rans, r_threshold):
     m = [[i, j] for j, i in dtmp.iteritems()]
     matched_p1 = np.array([kp1[i].pt for i, j in m])
     matched_p2 = np.array([kp2[j].pt for i, j in m])
+
+    with open('points', 'w') as f:
+        for i in xrange(len(matched_p1)):
+            f.write('%f %f %f %f\n' % (matched_p1[i][0], matched_p1[i][1], matched_p2[i][0], matched_p2[i][1]))
     try:
         #H, status = cv2.findHomography(matched_p1, matched_p2, cv2.RANSAC, 100.0)
         H, status = cv2.findHomography(matched_p1, matched_p2, cv2.RANSAC, rans)
@@ -101,6 +104,7 @@ def template_match(params_orig, params_template, rans, r_threshold):
         H = None
         status = None
     vis_flann = draw_match(img1, img2, matched_p1, matched_p2, status, H)
+    print H
     return vis_flann, status
 
 if __name__ == '__main__':

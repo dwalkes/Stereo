@@ -5,7 +5,7 @@ project( OpenCVReprojectImageToPointCloud )
 SET (CMAKE_CXX_COMPILER  "/usr/bin/clang++")
 SET (CMAKE_CXX_FLAGS "-Wall --std=c++11")
 
-find_package( PCL 1.2 REQUIRED )
+find_package( PCL 1.7 REQUIRED )
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
