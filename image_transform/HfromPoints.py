@@ -13,4 +13,8 @@ if __name__ == '__main__':
     m1 = np.array(m1)
     m2 = np.array(m2)
     H, status = cv2.findHomography(m1, m2, cv2.RANSAC, float(sys.argv[1]))
-    with open(sys.argv[3], 'w') as f: np.save(f, H)
+    with open(sys.argv[3], 'w') as f: 
+        for i in xrange(H.shape[0]):
+            for j in xrange(H.shape[1]):
+                f.write('%f ' % H[i, j])
+            f.write('\n')
