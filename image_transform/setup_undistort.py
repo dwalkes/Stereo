@@ -1,14 +1,14 @@
 import sys, cv2, numpy as np
 
-def changeify(x): mat[0, 0] = x/0.1; recalc()
-def changeifx(x): mat[1, 1] = x/0.1; recalc()
-def changeicx(x): mat[0, 2] = x/0.1; recalc()
-def changeicy(x): mat[1, 2] = x/0.1; recalc()
-def changeik1(x): params[0, 0] = x*0.1; recalc()
-def changeik2(x): params[0, 1] = x*0.1; recalc()
-def changeik3(x): params[0, 4] = x*0.1; recalc()
-def changeip1(x): params[0, 2] = x*0.01; recalc()
-def changeip2(x): params[0, 3] = x*0.01; recalc()
+def changeify(x): mat[0, 0] = (x-100)/0.1; recalc()
+def changeifx(x): mat[1, 1] = (x-100)/0.1; recalc()
+def changeicx(x): mat[0, 2] = (x-100)/0.1; recalc()
+def changeicy(x): mat[1, 2] = (x-100)/0.1; recalc()
+def changeik1(x): params[0, 0] = (x-100)*0.1; recalc()
+def changeik2(x): params[0, 1] = (x-100)*0.1; recalc()
+def changeik3(x): params[0, 4] = (x-100)*0.1; recalc()
+def changeip1(x): params[0, 2] = (x-100)*0.01; recalc()
+def changeip2(x): params[0, 3] = (x-100)*0.01; recalc()
 
 def recalc():
     print mat
@@ -30,15 +30,15 @@ if __name__ == '__main__':
     img = cv2.imread(sys.argv[1], 0)
     key = 0
     recalc()
-    cv2.createTrackbar('fx', 'res', 1, 200, changeifx)
-    cv2.createTrackbar('fy', 'res', 1, 200, changeify)
-    cv2.createTrackbar('cx', 'res', 1, 200, changeicx)
-    cv2.createTrackbar('cy', 'res', 1, 200, changeicy)
-    cv2.createTrackbar('k1', 'res', 1, 200, changeik1)
-    cv2.createTrackbar('k2', 'res', 1, 200, changeik2)
-    cv2.createTrackbar('p1', 'res', 1, 200, changeip1)
-    cv2.createTrackbar('p2', 'res', 1, 200, changeip2)
-    cv2.createTrackbar('k3', 'res', 1, 200, changeik3)
+    cv2.createTrackbar('fx', 'res', 100, 200, changeifx)
+    cv2.createTrackbar('fy', 'res', 100, 200, changeify)
+    cv2.createTrackbar('cx', 'res', 100, 200, changeicx)
+    cv2.createTrackbar('cy', 'res', 100, 200, changeicy)
+    cv2.createTrackbar('k1', 'res', 100, 200, changeik1)
+    cv2.createTrackbar('k2', 'res', 100, 200, changeik2)
+    cv2.createTrackbar('p1', 'res', 100, 200, changeip1)
+    cv2.createTrackbar('p2', 'res', 100, 200, changeip2)
+    cv2.createTrackbar('k3', 'res', 100, 200, changeik3)
     while key != 27:
         print key
         key = cv2.waitKey() % 0x100
