@@ -2,13 +2,13 @@ import sys, cv2, numpy as np
 
 def changeify(x): mat[0, 0] = (x-100)/0.1; recalc()
 def changeifx(x): mat[1, 1] = (x-100)/0.1; recalc()
-def changeicx(x): mat[0, 2] = (x-100)/0.1; recalc()
-def changeicy(x): mat[1, 2] = (x-100)/0.1; recalc()
-def changeik1(x): params[0, 0] = (x-100)*0.1; recalc()
-def changeik2(x): params[0, 1] = (x-100)*0.1; recalc()
-def changeik3(x): params[0, 4] = (x-100)*0.1; recalc()
-def changeip1(x): params[0, 2] = (x-100)*0.01; recalc()
-def changeip2(x): params[0, 3] = (x-100)*0.01; recalc()
+def changeicx(x): mat[0, 2] = (x-100)*0.5; recalc()
+def changeicy(x): mat[1, 2] = (x-100)*0.5; recalc()
+def changeik1(x): params[0, 0] = (x-100)*0.05; recalc()
+def changeik2(x): params[0, 1] = (x-100)*0.05; recalc()
+def changeik3(x): params[0, 4] = (x-100)*0.05; recalc()
+def changeip1(x): params[0, 2] = (x-100)*0.005; recalc()
+def changeip2(x): params[0, 3] = (x-100)*0.005; recalc()
 
 def recalc():
     print mat
@@ -19,15 +19,15 @@ def recalc():
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print 'USAGE <image> <out>\nSPACE for save'
+    img = cv2.imread(sys.argv[1], 0)
     mat = np.zeros((3, 3), dtype=np.float)
     mat[2, 2] = 1
     mat[0, 0] = 1
     mat[1, 1] = 1
-    mat[0, 2] = 1
-    mat[1, 2] = 1
+    mat[0, 2] = (img.shape[1]-1)*0.5#1
+    mat[1, 2] = (img.shape[0]-1)*0.5
     params = np.array([0., 0., 0., 0., 0.])
     params = params.reshape((1, 5))
-    img = cv2.imread(sys.argv[1], 0)
     key = 0
     recalc()
     cv2.createTrackbar('fx', 'res', 100, 200, changeifx)
