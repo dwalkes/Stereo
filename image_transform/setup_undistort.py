@@ -26,14 +26,15 @@ if __name__ == '__main__':
     mat[1, 1] = 1
     mat[0, 2] = (img.shape[1]-1)*0.5#1
     mat[1, 2] = (img.shape[0]-1)*0.5
-    params = np.array([0., 0., 0., 0., 0.])
-    params = params.reshape((1, 5))
+    params = np.array([0., 0., 0., 0., 0., 0., 0., 0.])
+    params = params.reshape((1, 8))
     key = 0
     recalc()
-    cv2.createTrackbar('fx', 'res', 100, 200, changeifx)
-    cv2.createTrackbar('fy', 'res', 100, 200, changeify)
-    cv2.createTrackbar('cx', 'res', int(mat[0, 2]), 700, changeicx)
-    cv2.createTrackbar('cy', 'res', int(mat[1, 2]), 700, changeicy)
+    cv2.imshow('img', img)
+    cv2.createTrackbar('fx', 'img', 100, 200, changeifx)
+    cv2.createTrackbar('fy', 'img', 100, 200, changeify)
+    cv2.createTrackbar('cx', 'img', int(mat[0, 2]), 700, changeicx)
+    cv2.createTrackbar('cy', 'img', int(mat[1, 2]), 700, changeicy)
     cv2.createTrackbar('k1', 'res', 100, 200, changeik1)
     cv2.createTrackbar('k2', 'res', 100, 200, changeik2)
     cv2.createTrackbar('p1', 'res', 100, 200, changeip1)
