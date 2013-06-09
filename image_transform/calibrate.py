@@ -11,7 +11,7 @@ import os
 
 
 USAGE = '''
-USAGE: calib.py [--save <filename>] [--debug <output path>] [--square_size] [<image mask>]
+USAGE: calib.py [--save <filename>] [--debug <output path>] [--write <conf file>]  [--square_size] [<image mask>]
 '''
 
 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     import getopt
     from glob import glob
 
-    args, img_mask = getopt.getopt(sys.argv[1:], '', ['save=', 'debug=', 'square_size='])
+    args, img_mask = getopt.getopt(sys.argv[1:], '', ['save=', 'debug=', 'square_size=', 'write='])
     args = dict(args)
     try:
         img_mask = img_mask[0]
@@ -31,6 +31,7 @@ if __name__ == '__main__':
     img_names = glob(img_mask)
     debug_dir = args.get('--debug')
     square_size = float(args.get('--square_size', 1.0))
+    mat_file = args.get('--write')
 
     pattern_size = (9, 6)
     pattern_points = np.zeros( (np.prod(pattern_size), 3), np.float32 )
@@ -69,5 +70,14 @@ if __name__ == '__main__':
     print "RMS:", rms
     print "camera matrix:\n", camera_matrix
     print "distortion coefficients: ", dist_coefs.ravel()
+    if mat_file:
+        with open(mat_file, 'w') as f:
+            for i in xrange(camera_matrix.shape[0]):
+                for j in xrange(camera_matrix.shape[1]):
+                    f.write('%f ' % camera_matrix[i, j])
+                f.write('\n')
+            for x in dist_coefs.ravel():
+                f.write('%f '% x)
+            f.write('0. 0. 0.\n')
     cv2.destroyAllWindows()
 
