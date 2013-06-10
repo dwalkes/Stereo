@@ -77,8 +77,8 @@ def draw_match(img1, img2, p1, p2, status = None, H = None, index=index):
 
 def params_from_image(img, surf=None):
     if surf == None:surf = cv2.SURF(1000)
-    #kp, desc = surf.detect(img, False)
-    kp, desc = surf.detectAndCompute(img, None)
+    kp, desc = surf.detect(img, None, False)
+    #kp, desc = surf.detectAndCompute(img, None)
     desc.shape = (-1, surf.descriptorSize())
     return {'img':img, 'kp':kp, 'desc':desc}
 
