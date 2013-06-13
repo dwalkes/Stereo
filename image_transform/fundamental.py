@@ -10,6 +10,7 @@ def main(argv):
     p1, p2 = np.array(r1), np.array(r2)
     ret, mask = cv2.findFundamentalMat(p1, p2)
     print ret
+    print mask
 
 
 if __name__ == '__main__':
