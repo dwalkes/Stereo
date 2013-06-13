@@ -12,12 +12,14 @@ def readParams(name):
         params = np.array(map(float, strings[3].split())).reshape((1, len(strings[3].split())))
     return mat, params
 
-
-if __name__ == '__main__':
-    if len(sys.argv) < 4:
+def main(argv):
+    if len(argv) < 4:
         print 'USAGE <params file> <source> <out>'
         exit()
-    mat, params = readParams(sys.argv[1])
-    img = cv2.imread(sys.argv[2])
+    mat, params = readParams(argv[1])
+    img = cv2.imread(argv[2])
     res = cv2.undistort(img, mat, params)
-    cv2.imwrite(sys.argv[3], res)
+    cv2.imwrite(argv[3], res)
+
+if __name__ == '__main__':
+    main(sys)
