@@ -1,7 +1,8 @@
 import sys, cv2, numpy as np
+from undistort import readParams
 
-def changeify(x): mat[0, 0] = (x-100)/0.1; recalc()
-def changeifx(x): mat[1, 1] = (x-100)/0.1; recalc()
+def changeifx(x): mat[0, 0] = (x-100)/0.1; recalc()
+def changeify(x): mat[1, 1] = (x-100)/0.1; recalc()
 def changeicx(x): mat[0, 2] = x; recalc()
 def changeicy(x): mat[1, 2] = x; recalc()
 def changeik1(x): params[0, 0] = (x-100)*0.05; recalc()
@@ -28,18 +29,20 @@ if __name__ == '__main__':
     mat[1, 2] = (img.shape[0]-1)*0.5
     params = np.array([0., 0., 0., 0., 0., 0., 0., 0.])
     params = params.reshape((1, 8))
+    if len(sys.argv) > 3:
+        mat, params = readParams(sys.argv[3])
     key = 0
     recalc()
     cv2.imshow('img', img)
-    cv2.createTrackbar('fx', 'img', 100, 200, changeifx)
-    cv2.createTrackbar('fy', 'img', 100, 200, changeify)
+    cv2.createTrackbar('fx', 'img', int(mat[1, 1]*0.1 + 100), 200, changeifx)
+    cv2.createTrackbar('fy', 'img', int(mat[0, 0]*0.1 + 100), 200, changeify)
     cv2.createTrackbar('cx', 'img', int(mat[0, 2]), 700, changeicx)
     cv2.createTrackbar('cy', 'img', int(mat[1, 2]), 700, changeicy)
-    cv2.createTrackbar('k1', 'res', 100, 200, changeik1)
-    cv2.createTrackbar('k2', 'res', 100, 200, changeik2)
-    cv2.createTrackbar('p1', 'res', 100, 200, changeip1)
-    cv2.createTrackbar('p2', 'res', 100, 200, changeip2)
-    cv2.createTrackbar('k3', 'res', 100, 200, changeik3)
+    cv2.createTrackbar('k1', 'res', int(params[0, 0]/0.05 + 100), 200, changeik1)
+    cv2.createTrackbar('k2', 'res', int(params[0, 1]/0.05 + 100), 200, changeik2)
+    cv2.createTrackbar('p1', 'res', int(params[0, 2]/0.05 + 100), 200, changeip1)
+    cv2.createTrackbar('p2', 'res', int(params[0, 3]/0.05 + 100), 200, changeip2)
+    cv2.createTrackbar('k3', 'res', int(params[0, 4]/0.05 + 100), 200, changeik3)
     while key != 27:
         print key
         key = cv2.waitKey() % 0x100
