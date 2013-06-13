@@ -77,8 +77,8 @@ def draw_match(img1, img2, p1, p2, status = None, H = None, index=index):
 
 def params_from_image(img, surf=None):
     if surf == None:surf = cv2.SURF(1000)
-    kp, desc = surf.detect(img, None, False)
-    #kp, desc = surf.detectAndCompute(img, None)
+    #kp, desc = surf.detect(img, None, False)
+    kp, desc = surf.detectAndCompute(img, None)
     desc.shape = (-1, surf.descriptorSize())
     return {'img':img, 'kp':kp, 'desc':desc}
 
@@ -94,9 +94,6 @@ def template_match(params_orig, params_template, rans, r_threshold):
     matched_p1 = np.array([kp1[i].pt for i, j in m])
     matched_p2 = np.array([kp2[j].pt for i, j in m])
 
-    with open('points', 'w') as f:
-        for i in xrange(len(matched_p1)):
-            f.write('%f %f %f %f\n' % (matched_p1[i][0], matched_p1[i][1], matched_p2[i][0], matched_p2[i][1]))
     try:
         #H, status = cv2.findHomography(matched_p1, matched_p2, cv2.RANSAC, 100.0)
         H, status = cv2.findHomography(matched_p1, matched_p2, cv2.RANSAC, rans)
@@ -105,11 +102,12 @@ def template_match(params_orig, params_template, rans, r_threshold):
         status = None
     vis_flann = draw_match(img1, img2, matched_p1, matched_p2, status, H)
     print H
-    return vis_flann, status
+    return vis_flann, status, matched_p1, matched_p2
 
 if __name__ == '__main__':
     import sys
-    try: fn1, fn2 = sys.argv[1:3]
+    print 'usage: match.py template img points image'
+    try: fn1, fn2, out_file_name = sys.argv[1:4]
     except:
         fn1 = 'template.jpg'
         fn2 = 'img.jpg'
@@ -125,7 +123,7 @@ if __name__ == '__main__':
         pr1 = params_from_image(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))#img1)
         pr2 = params_from_image(cv2.cvtColor(template, cv2.COLOR_BGR2GRAY))#img2)
         print 'img1 - %d features, img2 - %d features' % (len(pr1['kp']), len(pr2['kp']))
-        vis_flann, status = template_match(pr1, pr2, rans, r_threshold)
+        vis_flann, status, matched_p1, matched_p2 = template_match(pr1, pr2, rans, r_threshold)
         index += 1
         print 'flann match:',
         if status != None:
@@ -138,5 +136,9 @@ if __name__ == '__main__':
         if key == 84: r_threshold += 0.1
         if key == 82: r_threshold -= 0.1
         if key == 27: exit()
+        if key == 32:
+            with open(out_file_name, 'w') as f:
+                for i in xrange(len(matched_p1)):
+                    f.write('%f %f %f %f\n' % (matched_p1[i][0], matched_p1[i][1], matched_p2[i][0], matched_p2[i][1]))
 
 
