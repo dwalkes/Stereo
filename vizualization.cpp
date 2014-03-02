@@ -1,5 +1,4 @@
 #include "vizualization.h"
-
 //This function creates a PCL visualizer, sets the point cloud to view and returns a pointer
 boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
 {
@@ -36,9 +35,10 @@ cv::Mat drawBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments, cv::Sc
 {
     cv::Mat res;
     img_rgb.copyTo(res);
-	std::vector<Segment>::iterator it = segments.begin();
-    for(Segment s=*it; it != segments.end(); ++it, s=*it)
+
+    for(std::vector<Segment>::iterator it = segments.begin(); it != segments.end(); ++it)
     {
+        Segment &s=*it;
         //if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.7)
         //    cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(0, 255, 0));
         //else

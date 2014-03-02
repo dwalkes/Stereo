@@ -69,11 +69,12 @@ std::vector<Segment> getFilteredSegments(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
 std::vector<Segment> detectSegments(std::vector<Segment>& segments)
 {
     std::vector<Segment> res;
-	std::vector<Segment>::iterator it=segments.begin();
-	for(Segment s=*it; it != segments.end(); ++it, s=*it  )
-	{
-		if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.6) 
-			res.push_back(s);
+
+    for(std::vector<Segment>::iterator it=segments.begin(); it != segments.end(); ++it)
+    {
+        Segment &s=*it;
+        if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.6)
+            res.push_back(s);
 	}
     std::cout<<"Find "<< res.size()<<std::endl;
     return res;
@@ -94,9 +95,9 @@ double similarity(Segment& os, Segment& ns)
 std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>& newS)
 {
     std::vector<Segment> res;
-	std::vector<Segment>::iterator it=oldS.begin();
-	for(Segment os=*it; it != oldS.end(); ++it, os=*it  )
+    for(std::vector<Segment>::iterator it=oldS.begin(); it != oldS.end(); ++it)
     {
+        Segment &os=*it;
         Segment *best_seg = NULL;
         double best_err = 10000;
         for(int i = 0; i < newS.size(); i++)
@@ -203,9 +204,9 @@ void videWork(const char *left_name, const char* right_name, cv::Mat(*getDM)(con
         cv::Mat to_show = drawBoxes(frame1, oldS, cv::Scalar(0, 255, 0));
         cv::imshow("olds", to_show);
         cv::waitKey(10);
-		std::vector<Segment>::iterator it=oldS.begin();
-		for(Segment s=*it; it != oldS.end(); ++it, s=*it  )
+        for(std::vector<Segment>::iterator it=oldS.begin(); it != oldS.end(); ++it)
         {
+            Segment &s=*it;
             std::cout<<">>>>"<<s.top<<s.width<<" "<<s.height<<std::endl;
         }
     }
