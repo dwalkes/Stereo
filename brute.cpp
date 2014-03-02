@@ -164,8 +164,8 @@ void videoWork(int argc, char**argv)
 
 void photoWork(int argc, char** argv)
 {
-    auto left_name  = "tsukuba/scene1.row3.col3.ppm";
-    auto right_name = "tsukuba/scene1.row3.col5.ppm";
+    char* left_name  = "tsukuba/scene1.row3.col3.ppm";
+    char* right_name = "tsukuba/scene1.row3.col5.ppm";
     if (argc > 3)
     {
         left_name = argv[2];

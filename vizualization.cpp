@@ -8,7 +8,7 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> createVisualizer (pcl::Poin
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer->addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "reconstruction");
     //viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "reconstruction");
-    viewer->addCoordinateSystem ( 1.0 );
+    viewer->addCoordinateSystem ( 1.0, 0 );
     viewer->initCameraParameters ();
     return (viewer);
 }
@@ -36,7 +36,8 @@ cv::Mat drawBoxes(const cv::Mat& img_rgb, std::vector<Segment>& segments, cv::Sc
 {
     cv::Mat res;
     img_rgb.copyTo(res);
-    for(auto s : segments)
+	std::vector<Segment>::iterator it = segments.begin();
+    for(Segment s=*it; it != segments.end(); ++it, s=*it)
     {
         //if(s.height*1.0/s.width > 1.3 && s.height*1.0/s.width < 1.7)
         //    cv::rectangle(res, cv::Point(s.top.x, s.top.y), cv::Point(s.bottom.x, s.bottom.y), cv::Scalar(0, 255, 0));

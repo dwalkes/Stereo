@@ -2,23 +2,27 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 project( OpenCVReprojectImageToPointCloud )
 
-SET (CMAKE_CXX_COMPILER  "/usr/bin/clang++")
-SET (CMAKE_CXX_FLAGS "-Wall --std=c++11")
+#SET (CMAKE_CXX_COMPILER  "/usr/bin/clang++")
+#SET (CMAKE_CXX_FLAGS "-Wall --std=c++11")
 
-find_package( PCL 1.7 REQUIRED )
+find_package( PCL 1.7 REQUIRED COMPONENTS common visualization segmentation )
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-set(OpenCV_DIR "/opt/opencv244/share/OpenCV/")
+# set(OpenCV_DIR "/opt/opencv244/share/OpenCV/")
 
 find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 include_directories(${GTK2_INCLUDE_DIRS})
 link_directories(${GTK2_LIBRARY_DIRS})
+
+find_package(VTK REQUIRED)
+include_directories(${VTK_INCLUDE_DIRS})
 
 add_executable( stereoBMtune stereoBMtune.c )
 target_link_libraries( stereoBMtune ${OpenCV_LIBS} ${GTK2_LIBRARIES})
