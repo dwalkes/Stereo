@@ -114,9 +114,14 @@ std::vector<Segment> findPairs(std::vector<Segment>& oldS, std::vector<Segment>&
     return res;
 }
 
-std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*getDepthMap)(const cv::Mat& left, const cv::Mat& right), bool showCloud=false)
+std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*getDepthMap)(const cv::Mat& left, const cv::Mat& right), bool showCloud=false, cv::Mat **rectMap=NULL )
 {
-    cv::Mat img_disparity = dm::normalize(getDepthMap(dm::toGray(img_rgb), dm::toGray(right_img))); 
+	if(rectMap != NULL)
+	{
+		img_rgb = dm::rectify(img_rgb,rectMap,0);
+		right_img = dm::rectify(right_img,rectMap,1);
+	}
+	cv::Mat img_disparity = dm::normalize(getDepthMap(dm::toGray(img_rgb), dm::toGray(right_img)));
 
     cv::imshow("rbg-image", img_rgb);
     cv::imshow("disparity-image", img_disparity);
@@ -149,6 +154,28 @@ std::vector<Segment> frameWork(cv::Mat& img_rgb, cv::Mat& right_img, cv::Mat (*g
         }
     }
     return segments;
+}
+
+/**
+* Allocates a rectification map based on intrisic and extrinsic filenames
+* @param rmap - location to write a pointer to the allocated cv::Mat array structure.  This pointer must be freed with delete [] when no longer in use
+* @param intrinsic_file, extrinsic_file - intrinsic and extrinsic filenames
+* @param imageSize the size of the image to be rectified
+* @return true if no error occurred.  This could be because neither intrinsic nor exstrnsic file was specified, in which chase rmap will be NULL
+*/
+static bool allocateRectmap(cv::Mat*** rmap, const char *intrinsic_file, const char *extrinsic_file,  cv::Size imageSize)
+{
+	*rmap = NULL;
+	if(intrinsic_file != NULL || extrinsic_file != NULL)
+	{
+		if(intrinsic_file == NULL || extrinsic_file == NULL)
+		{
+			std::cout << "Must specify intrinsic and extrinsic files together or specify neither\n";
+			return false;
+		}
+		*rmap = dm::loadRMap(intrinsic_file, extrinsic_file, imageSize);
+	}
+	return true;
 }
 
 void videWork(const char *left_name, const char* right_name, cv::Mat(*getDM)(const cv::Mat& left, const cv::Mat& right))
@@ -186,15 +213,19 @@ void videWork(const char *left_name, const char* right_name, cv::Mat(*getDM)(con
 
 void printHelp(char** argv)
 {
-    std::cerr << "Usage: " << argv[0] << " [-v] [-m var|bm|sgbm] -l <left image> -r <right image> " << std::endl;
+    std::cerr << "Usage: " << argv[0] << " [-v] [-m var|bm|sgbm] [-i intrinsic_file] [-e extrinsic_file] -l <left image> -r <right image> " << std::endl;
     std::cerr << "\t-m mode" << std::endl;
     std::cerr << "\t-v vdeo" << std::endl;
+    std::cerr << "\t-i and -e arguments are intrinsic and extrinsic yml files created for this camera configuration by opencl stereo_calib example code" << std::endl;
 }
 
 int main( int argc, char** argv )
 {
     const char* left_name = "";
     const char* right_name = "";
+    const char* extrinsic_file = NULL;
+    const char* intrinsic_file = NULL;
+
     bool isVideo = false;
     cv::Mat  (*getDM)(const cv::Mat& left, const cv::Mat& right) = &dm::getDepthMapSGBM;
     if (argc < 3)
@@ -215,18 +246,39 @@ int main( int argc, char** argv )
             if(strcmp(argv[i], "sgbm") == 0) getDM = dm::getDepthMapSGBM;
             if(strcmp(argv[i], "var") == 0) getDM = dm::getDepthMapVar;
         }
+        if(strcmp(argv[i], "-i") == 0)
+        {
+            i++;
+            intrinsic_file = argv[i];
+        }
+        if(strcmp(argv[i], "-e") == 0)
+        {
+            i++;
+            extrinsic_file = argv[i];
+        }
+
     }
     if(strlen(left_name) == 0 || strlen(right_name) == 0)
     {
         printHelp(argv);
         return 1;
     }
+
     if(!isVideo)
     {
         std::cout<<"Working with photo\n";
         cv::Mat img_rgb = cv::imread(left_name, CV_LOAD_IMAGE_COLOR);
         cv::Mat right_img = cv::imread(right_name, CV_LOAD_IMAGE_COLOR);
-        frameWork(img_rgb, right_img, getDM, true);
+        cv::Mat **rectMap = NULL;
+        if(!allocateRectmap(&rectMap,intrinsic_file,extrinsic_file,right_img.size()))
+        {
+            return 1;
+        }
+        frameWork(img_rgb, right_img, getDM, true, rectMap);
+        if(rectMap != NULL)
+        {
+            delete[] rectMap;
+        }
     }
     else
     {
