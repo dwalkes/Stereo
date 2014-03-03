@@ -20,17 +20,48 @@ struct _ChData
 	GtkImage *image_left;
 	GtkImage *image_right;
 	GtkImage *image_depth;
+    GdkPixbuf *pixbuf_left;
+    GdkPixbuf *pixbuf_right;
+    GdkPixbuf *pixbuf_depth;
+
 
 	/* OpenCV */
 	CvStereoBMState *BMState; /* Block Matching State */
 	IplImage *cv_image_left;
 	IplImage *cv_image_right;
+
 	CvMat *cv_image_depth;
 	IplImage *cv_image_depth_aux;
 	
 };
 
 
+/**
+* Update the passed gtk image with the passed Ipl image, scaling if necessary
+*/
+static void update_gtk_image( GtkImage* gtk,  IplImage* ipl )
+{
+	//Update the depth image on the window
+    GdkPixbuf *pixel_dest = gtk_image_get_pixbuf( gtk );
+	GdkPixbuf *pixel_source = gdk_pixbuf_new_from_data (
+		(guchar*)ipl->imageData,
+		GDK_COLORSPACE_RGB,
+		FALSE,
+		ipl->depth,
+		ipl->width,
+		ipl->height,
+		(ipl->widthStep),
+		NULL,
+		NULL
+	);
+
+    gdk_pixbuf_scale( pixel_source,pixel_dest,0,0,gdk_pixbuf_get_width(pixel_dest),gdk_pixbuf_get_height(pixel_dest),
+                0,0,(double)gdk_pixbuf_get_width(pixel_dest)/(double)gdk_pixbuf_get_width(pixel_source),
+                    (double)gdk_pixbuf_get_height(pixel_dest)/(double)gdk_pixbuf_get_height(pixel_source),GDK_INTERP_BILINEAR );
+    gtk_image_set_from_pixbuf(gtk,pixel_dest);
+    g_object_unref( pixel_source );
+
+}
 /* Function to compute StereoBM and update the result on the window */
 void computeStereoBM ( ChData *data )
 {
@@ -62,21 +93,7 @@ void computeStereoBM ( ChData *data )
 	}
 	
 	//Transform IplImage to GtkImage
-	img = data->cv_image_depth_aux;
-	pix = gdk_pixbuf_new_from_data (
-		(guchar*)img->imageData, 
-		GDK_COLORSPACE_RGB, 
-		FALSE, 
-		img->depth, 
-		img->width, 
-		img->height, 
-		(img->widthStep), 
-		NULL, 
-		NULL
-	);
-	//Update the depth image on the window
-	gtk_image_set_from_pixbuf( data->image_depth, pix); 
-	
+	update_gtk_image(data->image_depth,data->cv_image_depth_aux);
 }
 
 
@@ -260,6 +277,8 @@ G_MODULE_EXPORT void on_adjustment9_value_changed( GtkAdjustment *adjustment, Ch
 	data->BMState->speckleRange = value;
 	computeStereoBM( data );
 }
+
+
  
 int
 main( int    argc,
@@ -289,7 +308,8 @@ main( int    argc,
 		{
 			i++;
 			right_filename = argv[i];
-		} 
+        }		
+    
 	}
 	
 	fprintf(stdout,"-left %s\n-right %s\n",left_filename,right_filename);
@@ -358,8 +378,16 @@ main( int    argc,
 	data->image_depth = GTK_IMAGE( gtk_builder_get_object( builder, "image_disparity" ) );
 	
 	//Put images on place
-	gtk_image_set_from_file ( data->image_left, left_filename );
-	gtk_image_set_from_file ( data->image_right, right_filename );
+    // I'm not sure why the *3 is necessary for the left and right pixel buffers but if
+    // I don't include this it is 1/3 of the expected width
+    data->pixbuf_left=gdk_pixbuf_new( GDK_COLORSPACE_RGB, FALSE, 8, 320*3, 240 );
+    data->pixbuf_right=gdk_pixbuf_new( GDK_COLORSPACE_RGB, FALSE, 8, 320*3, 240 );
+    data->pixbuf_depth=gdk_pixbuf_new( GDK_COLORSPACE_RGB, FALSE, 8, 320, 240 );
+	gtk_image_set_from_pixbuf( data->image_left, data->pixbuf_left );
+	gtk_image_set_from_pixbuf( data->image_right, data->pixbuf_right );
+	gtk_image_set_from_pixbuf( data->image_depth, data->pixbuf_depth );
+    update_gtk_image(data->image_left, data->cv_image_left);
+    update_gtk_image(data->image_right, data->cv_image_right);
 	
 	//TODO: Get all the BM Default parameters from the GUI definition
 	data->BMState->preFilterSize 		= 5;
@@ -386,6 +414,10 @@ main( int    argc,
  
 	/* Start main loop */
 	gtk_main();
+
+    g_object_unref(data->pixbuf_left);
+    g_object_unref(data->pixbuf_right);
+    g_object_unref(data->pixbuf_depth);
  
 	return( 0 );
 }
