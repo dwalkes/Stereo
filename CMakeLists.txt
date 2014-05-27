@@ -24,7 +24,7 @@ link_directories(${GTK2_LIBRARY_DIRS})
 find_package(VTK REQUIRED)
 include_directories(${VTK_INCLUDE_DIRS})
 
-add_executable( stereoBMtune stereoBMtune.c )
+add_executable( stereoBMtune stereoBMtune.cpp )
 target_link_libraries( stereoBMtune ${OpenCV_LIBS} ${GTK2_LIBRARIES})
 
 add_executable( stereoVartune stereoVartune.cpp )

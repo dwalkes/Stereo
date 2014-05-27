@@ -9,7 +9,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include "CVStereoRectify.h"
 
+#define GTK_CALLBACK extern "C" G_MODULE_EXPORT
 
 /* Main data structure definition */
 typedef struct _ChData ChData;
@@ -32,7 +34,8 @@ struct _ChData
 
 	CvMat *cv_image_depth;
 	IplImage *cv_image_depth_aux;
-	
+
+    CVStereoRectify *rectify;	
 };
 
 
@@ -71,6 +74,15 @@ void computeStereoBM ( ChData *data )
 	GdkPixbuf *pix; 
 	IplImage *img;
 	uchar *ptr_dst;
+    // Recify the image before finding correspondence
+    cv::Mat img1;
+    cv::Mat img2;
+    img1 = cv::cvarrToMat(data->cv_image_left);
+    img2 = cv::cvarrToMat(data->cv_image_right);
+    if( data->rectify->transform(img1,img2) ) {
+        data->BMState->roi1 = data->rectify->getROI1();
+        data->BMState->roi2 = data->rectify->getROI2();
+    }
 	cvFindStereoCorrespondenceBM ( 
 		data->cv_image_left,
 		data->cv_image_right, 
@@ -100,7 +112,7 @@ void computeStereoBM ( ChData *data )
 /* Define callbacks */
 
 //Callback for adjustment preFilterSize
-G_MODULE_EXPORT void on_adjustment1_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment1_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -125,7 +137,7 @@ G_MODULE_EXPORT void on_adjustment1_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment preFilterCap
-G_MODULE_EXPORT void on_adjustment2_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment2_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -142,7 +154,7 @@ G_MODULE_EXPORT void on_adjustment2_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment SADWindowSize
-G_MODULE_EXPORT void on_adjustment3_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment3_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 
@@ -175,7 +187,7 @@ G_MODULE_EXPORT void on_adjustment3_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment minDisparity
-G_MODULE_EXPORT void on_adjustment4_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment4_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -191,7 +203,7 @@ G_MODULE_EXPORT void on_adjustment4_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment numberOfDisparities
-G_MODULE_EXPORT void on_adjustment5_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment5_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -215,7 +227,7 @@ G_MODULE_EXPORT void on_adjustment5_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment textureThreshold
-G_MODULE_EXPORT void on_adjustment6_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment6_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -231,7 +243,7 @@ G_MODULE_EXPORT void on_adjustment6_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment uniquenessRatio
-G_MODULE_EXPORT void on_adjustment7_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment7_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -247,7 +259,7 @@ G_MODULE_EXPORT void on_adjustment7_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment speckleWindowSize
-G_MODULE_EXPORT void on_adjustment8_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment8_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -263,7 +275,7 @@ G_MODULE_EXPORT void on_adjustment8_value_changed( GtkAdjustment *adjustment, Ch
 }
 
 //Callback for adjustment speckleRange
-G_MODULE_EXPORT void on_adjustment9_value_changed( GtkAdjustment *adjustment, ChData *data )
+GTK_CALLBACK void on_adjustment9_value_changed( GtkAdjustment *adjustment, ChData *data )
 {
 	gint value;
 	
@@ -288,6 +300,8 @@ main( int    argc,
 	char default_right_filename[] = "tsukuba/scene1.row3.col5.ppm";
 	char *left_filename = default_left_filename;
 	char *right_filename = default_right_filename;
+    char *intrinsics_filename=NULL;
+    char *extrinsics_filename=NULL;
 	int i;
 	int norm_width = 320;
 	int norm_height = 240;
@@ -309,10 +323,21 @@ main( int    argc,
 			i++;
 			right_filename = argv[i];
         }		
-    
+        else if (strcmp (argv[i], "-i") == 0)
+		{
+			i++;
+			intrinsics_filename = argv[i];
+        }		
+        else if (strcmp (argv[i], "-e") == 0)
+		{
+			i++;
+			extrinsics_filename = argv[i];
+        }		
+
 	}
 	
-	fprintf(stdout,"-left %s\n-right %s\n",left_filename,right_filename);
+	fprintf(stdout,"-left %s\n-right %s intrinsics %s extrinsics %s\n",left_filename,right_filename,intrinsics_filename==NULL? "not specified" : intrinsics_filename,
+                                                                                                    extrinsics_filename==NULL? "not specified" : extrinsics_filename);
  
 	/* Init GTK+ */
 	gtk_init( &argc, &argv );
@@ -399,6 +424,9 @@ main( int    argc,
 	data->BMState->uniquenessRatio 	= 0;
 	data->BMState->speckleWindowSize 	= 0;
 	data->BMState->speckleRange		= 0;
+
+    /* Setup intrinsic and extrinsic files based on passed params */
+    data->rectify=new  CVStereoRectify();
 	
 	/* Execute first iteration */
 	computeStereoBM ( data );
@@ -418,6 +446,7 @@ main( int    argc,
     g_object_unref(data->pixbuf_left);
     g_object_unref(data->pixbuf_right);
     g_object_unref(data->pixbuf_depth);
+    delete data->rectify;
  
 	return( 0 );
 }
